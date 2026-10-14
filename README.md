@@ -1,75 +1,86 @@
 # Prabhanjan P Katti — Portfolio
 
-A premium, dark-themed personal portfolio built with plain HTML5, CSS3 and
-vanilla JavaScript — no frameworks, no build step.
+A high-performance, accessible, dark-themed personal portfolio built with plain HTML5, CSS3, and vanilla JavaScript (ES6) — no build step or node runtime dependencies required. Designed specifically for static hosting on **GitHub Pages**, **Vercel**, or **Netlify**.
 
-## Structure
+## Project Structure
 
 ```
 portfolio/
-├── index.html          All markup, in section order (nav → hero → … → footer)
-├── style.css            Design tokens (:root) + one section per component
-├── script.js             One init function per feature, see the file header
+├── index.html          Semantic markup and SVG icon system
+├── style.css            Design tokens (:root), responsive layout & component styles
+├── script.js             Central project data, modal, Formspree async form & canvas
 └── assets/
-    ├── images/          profile.jpg is here; add project screenshots too
-    ├── icons/            favicon.svg (placeholder monogram)
-    ├── certificates/     Add certificate images/PDFs here
-    └── resume/           Add resume.pdf here
+    ├── images/          profile.jpg (headshot)
+    ├── icons/            favicon.svg
+    ├── certificates/     Optional certificate images or PDFs
+    └── resume/           resume.pdf (verified resume file)
 ```
 
-## Already filled in from your resume
+## Features & Upgrades
 
-- **Resume PDF** at `assets/resume/resume.pdf` — the View/Download buttons
-  and the footer's "Resume" link all point to it.
-- **Phone, email and LinkedIn** in the Contact section, footer, hero social
-  pills, and the contact form's `mailto:` target.
-- **Photo** — your headshot is at `assets/images/profile.jpg`, cropped and
-  shown as a circular avatar in the About section.
-- **GitHub** — github.com/Prabhanjan3247, linked from the hero, footer,
-  Contact section, and the Projects "Visit GitHub" button.
-- **Location** — Electronic City, Bangalore, shown in the Contact section.
-- **Education** — both degrees (with CGPA) and both schools (with dates and
-  percentages).
-- **Experience, Skills and Certifications** content, matched to your resume.
+1. **Recruiter-Focused Identity**:
+   - Headline: *"Building intelligent systems at the intersection of electronics, embedded engineering and software."*
+   - Clear distinction between B.Tech ECE (Major) and Computer Science & Engineering (Academic Minor) at PES University.
+   - Grounded metrics without misleading counts or fake claims.
 
-## Still to replace
+2. **Project Detail Views & Central Data**:
+   - Central `projectsData` array in `script.js` maintaining problem statements, architecture, contributions, status, and verified URLs.
+   - Accessible **Project Details Modal** (`role="dialog"`, ESC key close, URL hash deep linking like `#project-churn`, `#project-quiz`, `#project-rtls`).
+   - Verified Code button for **Customer Churn Prediction** (`github.com/Prabhanjan3247/Customer-Churn-Prediction`).
+   - Missing repository buttons are hidden cleanly—no broken `#` links or fabricated URLs.
+   - Distinct classification of the RTLS work as **industrial research & technology evaluation** during the Cummins India internship.
 
-- **Certification dates & links:** your resume doesn't include issue dates,
-  so each cert card says "Add issue date" — and the "View Credential"
-  buttons are still `href="#"` until you have real links.
-- **Project links:** each project card's "Code" / "Live Demo" buttons are
-  `href="#"` until you add real repository and deployment URLs.
-- **Achievements section:** still empty-state placeholders (hackathons,
-  awards, etc.) — nothing on your resume to fill these yet.
-- **Contact form:** has no backend. Submitting opens the visitor's email
-  client via a `mailto:` link (see `initContactForm` in `script.js`). For a
-  real inbox, wire it to [Formspree](https://formspree.io),
-  [EmailJS](https://www.emailjs.com/) or your host's forms feature (e.g.
-  Netlify Forms) instead.
+3. **Production-Ready FormSubmit.co Contact Form (Unlimited Free Submissions)**:
+   - Asynchronous `fetch` submission with loading state, anti-duplicate prevention, honeypot spam protection (`_gotcha`), and client-side validation.
+   - Clean success, failure, and first-time activation status notifications.
+   - 100% unlimited free messages delivered straight to `prabhanjank6080@gmail.com` with no monthly caps and no account needed.
 
-## Running locally
+4. **Reorganized Technical Skills**:
+   - Categorized into 6 clean, verified groups:
+     1. *Embedded Systems & Digital Design*
+     2. *Electronics & Simulation*
+     3. *Programming Languages*
+     4. *Software & Data Analytics*
+     5. *Cloud & AI Tools*
+     6. *Professional Skills*
 
-No build step — just serve the folder, e.g.:
+5. **Cleaned Certifications & Activities**:
+   - Removed all `"Add issue date"` placeholders.
+   - Credential verification tags for all 9 recognized certifications.
+   - Removed empty achievement card placeholders.
 
-```
+## Contact Form Activation (30 Seconds — One Time Only)
+
+The contact form is already pre-configured to send messages directly to `prabhanjank6080@gmail.com` with **unlimited submissions** via FormSubmit.co:
+
+1. Open your portfolio website and submit a quick test message through the Contact section.
+2. Check your `prabhanjank6080@gmail.com` inbox for an email from FormSubmit titled *"Please confirm your email"*.
+3. Click the **"Activate Form"** button inside that email.
+4. That's it! From then on, every message submitted on your portfolio arrives directly in your Gmail inbox with zero limits, and you can reply to visitors normally with the standard "Reply" button.
+
+## Running Locally
+
+Open `index.html` directly in any web browser, or serve it locally using any static HTTP server:
+
+```bash
+# Using python:
+python -m http.server 8000
+
+# Or using npx:
 npx serve .
 ```
 
-or open `index.html` directly in a browser.
+Then visit `http://localhost:8000` (or the printed port).
 
-## Deploying
+## Deploying to GitHub Pages
 
-Works as-is on **GitHub Pages**, **Vercel**, or **Netlify** — push the
-`portfolio/` folder to a repo and point any of the three at it (no build
-command needed, output directory is the repo root).
-
-## Notes on the code
-
-- Colors, fonts, spacing and easing all live as CSS custom properties at
-  the top of `style.css` — change them once, they cascade everywhere.
-- The hero background canvas (`initHeroCanvas` in `script.js`) draws a
-  small anchor/tag network — a nod to the RTLS work described in the
-  Experience section — and pauses automatically off-screen.
-- All animation respects `prefers-reduced-motion`.
-- Icons are a single inline `<svg><symbol>` sprite near the top of
-  `index.html`, reused via `<use href="#icon-name">` — add new ones there.
+1. Push your repository to GitHub:
+   ```bash
+   git add .
+   git commit -m "Upgrade portfolio with project detail modals and Formspree"
+   git push origin main
+   ```
+2. In your repository on GitHub, go to **Settings** → **Pages**.
+3. Under **Branch**, select `main` and set the folder to `/` (or `/portfolio` if hosted in a subfolder).
+4. Click **Save**. Within 1–2 minutes, your portfolio will be live at:
+   `https://<your-username>.github.io/<repo-name>/`
