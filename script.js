@@ -26,11 +26,12 @@
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* =========================================================
-     CONTACT ENDPOINT CONFIGURATION (FormSubmit.co - Unlimited Free)
-     Sends messages directly to prabhanjank6080@gmail.com with
-     zero monthly submission limits. No third-party account required.
+     CONTACT ENDPOINT CONFIGURATION (Web3Forms — free, no ads, no activation)
+     Messages are forwarded directly to prabhanjank6080@gmail.com.
+     Access key is public by design (safe to commit).
      ========================================================= */
-  const CONTACT_EMAIL = "prabhanjank6080@gmail.com";
+  const CONTACT_EMAIL    = "prabhanjank6080@gmail.com";
+  const WEB3FORMS_KEY    = "73f93a41-176c-4e05-986a-eb6eaee6d146";
 
   /* =========================================================
      1. CENTRAL PROJECT DATA
@@ -524,31 +525,32 @@
     });
   }
 
-  /* ---------- 13. Contact form (client-side validation → mailto redirect) ---------- */
+  /* ---------- 13. Contact form (Web3Forms async — free, no ads, no activation) ---------- */
   function initContactForm() {
-    const form = $("#contactForm");
-    const status = $("#formStatus");
+    const form      = $("#contactForm");
+    const status    = $("#formStatus");
     if (!form || !status) return;
 
-    const submitBtn = $(".contact-form__submit", form);
+    const submitBtn      = $(".contact-form__submit", form);
     const originalBtnHtml = submitBtn ? submitBtn.innerHTML : "Send Message";
 
     function showStatus(message, type = "info") {
-      status.className = `contact-form__status is-visible is-${type}`;
-      status.innerHTML = message;
+      status.className  = `contact-form__status is-visible is-${type}`;
+      status.innerHTML  = message;
+      status.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       $$("input, textarea", form).forEach((el) => el.classList.remove("is-invalid"));
 
       // Honeypot spam protection
-      const honeypot = form.querySelector('[name="_honey"], [name="_gotcha"]')?.value;
+      const honeypot = form.querySelector('[name="_honey"]')?.value;
       if (honeypot) return;
 
-      const nameInput  = $("#name",    form);
-      const emailInput = $("#email",   form);
+      const nameInput    = $("#name",    form);
+      const emailInput   = $("#email",   form);
       const subjectInput = $("#subject", form);
       const messageInput = $("#message", form);
 
@@ -560,32 +562,66 @@
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       let hasError = false;
 
-      if (!name)                          { nameInput.classList.add("is-invalid");    hasError = true; }
-      if (!email || !emailRegex.test(email)) { emailInput.classList.add("is-invalid"); hasError = true; }
-      if (!subject)                       { subjectInput.classList.add("is-invalid"); hasError = true; }
-      if (!message)                       { messageInput.classList.add("is-invalid"); hasError = true; }
+      if (!name)                             { nameInput.classList.add("is-invalid");    hasError = true; }
+      if (!email || !emailRegex.test(email)) { emailInput.classList.add("is-invalid");   hasError = true; }
+      if (!subject)                          { subjectInput.classList.add("is-invalid"); hasError = true; }
+      if (!message)                          { messageInput.classList.add("is-invalid"); hasError = true; }
 
       if (hasError) {
-        showStatus("Please complete the highlighted fields with valid information.", "error");
-        const firstInvalid = $(".is-invalid", form);
-        if (firstInvalid) firstInvalid.focus();
+        showStatus("Please complete all highlighted fields with valid information.", "error");
+        $(".is-invalid", form)?.focus();
         return;
       }
 
-      // Build pre-filled mailto URL and open the email client
-      const body = `From: ${name} (${email})\n\n${message}`;
-      const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      // Loading state
+      if (submitBtn) {
+        submitBtn.disabled  = true;
+        submitBtn.innerHTML = `Sending\u2026 <span class="pulse-dot"></span>`;
+      }
 
-      window.location.href = mailtoUrl;
+      try {
+        const payload = new FormData();
+        payload.append("access_key", WEB3FORMS_KEY);
+        payload.append("name",    name);
+        payload.append("email",   email);
+        payload.append("subject", `Portfolio Contact: ${subject}`);
+        payload.append("message", `From: ${name} (${email})\n\n${message}`);
+        payload.append("botcheck", "");       // honeypot field for Web3Forms
+        payload.append("from_name", "Portfolio Website");
 
-      showStatus(
-        "Your email client should have opened with a pre-filled message. If nothing happened, you can email me directly at " + CONTACT_EMAIL + ".",
-        "success"
-      );
-      form.reset();
+        const res  = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          body:   payload,
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showStatus(
+            "\u2713 Message sent! Thank you, " + name + ". I\u2019ll get back to you shortly.",
+            "success"
+          );
+          form.reset();
+        } else {
+          const fallback = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent("From: " + name + " (" + email + ")\n\n" + message)}`;
+          showStatus(
+            `Something went wrong (${data.message || "unknown error"}). <a href="${fallback}" class="contact-form__fallback-link">Email me directly \u2192</a>`,
+            "error"
+          );
+        }
+      } catch {
+        const fallback = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent("From: " + name + " (" + email + ")\n\n" + message)}`;
+        showStatus(
+          `Network error. <a href="${fallback}" class="contact-form__fallback-link">Click here to email me directly \u2192</a>`,
+          "error"
+        );
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled  = false;
+          submitBtn.innerHTML = originalBtnHtml;
+        }
+      }
     });
   }
-
 
   /* ---------- 14. Hero RTLS network canvas ----------
      A lightweight animated node network — anchors linked by signal
