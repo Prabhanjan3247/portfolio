@@ -524,7 +524,7 @@
     });
   }
 
-  /* ---------- 13. Contact form (Formspree Async + Accessible Validation) ---------- */
+  /* ---------- 13. Contact form (client-side validation → mailto redirect) ---------- */
   function initContactForm() {
     const form = $("#contactForm");
     const status = $("#formStatus");
@@ -533,49 +533,37 @@
     const submitBtn = $(".contact-form__submit", form);
     const originalBtnHtml = submitBtn ? submitBtn.innerHTML : "Send Message";
 
-    function showStatus(message, type = "info", htmlExtra = "") {
+    function showStatus(message, type = "info") {
       status.className = `contact-form__status is-visible is-${type}`;
-      status.innerHTML = message + (htmlExtra ? `<div>${htmlExtra}</div>` : "");
+      status.innerHTML = message;
     }
 
-    form.addEventListener("submit", async (e) => {
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
 
       $$("input, textarea", form).forEach((el) => el.classList.remove("is-invalid"));
 
-      // Honeypot protection
+      // Honeypot spam protection
       const honeypot = form.querySelector('[name="_honey"], [name="_gotcha"]')?.value;
       if (honeypot) return;
 
-      const nameInput = $("#name", form);
-      const emailInput = $("#email", form);
+      const nameInput  = $("#name",    form);
+      const emailInput = $("#email",   form);
       const subjectInput = $("#subject", form);
       const messageInput = $("#message", form);
 
-      const name = nameInput.value.trim();
-      const email = emailInput.value.trim();
+      const name    = nameInput.value.trim();
+      const email   = emailInput.value.trim();
       const subject = subjectInput.value.trim();
       const message = messageInput.value.trim();
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       let hasError = false;
 
-      if (!name) {
-        nameInput.classList.add("is-invalid");
-        hasError = true;
-      }
-      if (!email || !emailRegex.test(email)) {
-        emailInput.classList.add("is-invalid");
-        hasError = true;
-      }
-      if (!subject) {
-        subjectInput.classList.add("is-invalid");
-        hasError = true;
-      }
-      if (!message) {
-        messageInput.classList.add("is-invalid");
-        hasError = true;
-      }
+      if (!name)                          { nameInput.classList.add("is-invalid");    hasError = true; }
+      if (!email || !emailRegex.test(email)) { emailInput.classList.add("is-invalid"); hasError = true; }
+      if (!subject)                       { subjectInput.classList.add("is-invalid"); hasError = true; }
+      if (!message)                       { messageInput.classList.add("is-invalid"); hasError = true; }
 
       if (hasError) {
         showStatus("Please complete the highlighted fields with valid information.", "error");
@@ -584,68 +572,20 @@
         return;
       }
 
-      // Asynchronous FormSubmit.co submission (unlimited free messages)
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `Sending... <span class="pulse-dot"></span>`;
-      }
+      // Build pre-filled mailto URL and open the email client
+      const body = `From: ${name} (${email})\n\n${message}`;
+      const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-      try {
-        const response = await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            name,
-            email,
-            _subject: `Portfolio Message from ${name}: ${subject}`,
-            subject,
-            message,
-            _captcha: "false",
-            _template: "table",
-          }),
-        });
+      window.location.href = mailtoUrl;
 
-        const data = await response.json().catch(() => ({}));
-
-        const isSuccess = response.ok && (data.success === "true" || data.success === true);
-
-        if (isSuccess) {
-          showStatus("Thank you! Your message has been sent successfully. I will get back to you shortly.", "success");
-          form.reset();
-        } else {
-          const errMsg = data.message || data.error || "Submission could not be completed.";
-          if (errMsg.toLowerCase().includes("activate") || errMsg.toLowerCase().includes("activation")) {
-            showStatus(
-              `<strong>Action Required to Receive Emails:</strong> FormSubmit has sent a confirmation email to <strong>${CONTACT_EMAIL}</strong>. Please check your Inbox (or Spam/Junk folder) and click <strong>"Activate Form"</strong> to activate delivery.`,
-              "info"
-            );
-          } else if (errMsg.toLowerCase().includes("web server") || errMsg.toLowerCase().includes("html files")) {
-            showStatus(
-              "Local file warning: FormSubmit requires running via a local web server (e.g., Live Server, <code>http://localhost:5500</code>) or live hosting (GitHub Pages/Vercel), not directly via <code>file:///</code>.",
-              "error"
-            );
-          } else {
-            showStatus(`Notice: ${errMsg} You can reach me directly at ${CONTACT_EMAIL}.`, "error");
-          }
-        }
-      } catch (err) {
-        const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`From: ${name} (${email})\n\n${message}`)}`;
-        showStatus(
-          "Network connection issue. You can send your message directly via email:",
-          "error",
-          `<a href="${mailtoUrl}" class="btn btn--sm btn--primary contact-form__fallback-btn"><svg class="icon icon--sm"><use href="#icon-mail"></use></svg> Send via Email Client</a>`
-        );
-      } finally {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalBtnHtml;
-        }
-      }
+      showStatus(
+        "Your email client should have opened with a pre-filled message. If nothing happened, you can email me directly at " + CONTACT_EMAIL + ".",
+        "success"
+      );
+      form.reset();
     });
   }
+
 
   /* ---------- 14. Hero RTLS network canvas ----------
      A lightweight animated node network — anchors linked by signal
