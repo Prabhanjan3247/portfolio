@@ -107,6 +107,7 @@
   document.addEventListener("DOMContentLoaded", init);
 
   function init() {
+    initThemeToggle();
     initLoadingScreen();
     initCustomCursor();
     initProgressBar();
@@ -121,6 +122,53 @@
     initContactForm();
     initHeroCanvas();
     initFooterYear();
+  }
+
+  /* ---------- 2.5 Theme toggle (dark / light mode) ---------- */
+  function initThemeToggle() {
+    const toggle = $("#themeToggle");
+    if (!toggle) return;
+
+    const storageKey = "portfolio-theme";
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+    function applyTheme(theme) {
+      if (theme === "light") {
+        document.documentElement.setAttribute("data-theme", "light");
+        toggle.setAttribute("aria-label", "Switch to dark mode");
+        toggle.setAttribute("title", "Switch to dark mode");
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+        toggle.setAttribute("aria-label", "Switch to light mode");
+        toggle.setAttribute("title", "Switch to light mode");
+      }
+    }
+
+    // Determine initial theme: saved preference -> dark default
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+      applyTheme(saved);
+    } else if (!prefersDark.matches) {
+      // Default dark, but honor system light if preferred
+      applyTheme("dark");
+    }
+
+    toggle.addEventListener("click", () => {
+      const isLight = document.documentElement.getAttribute("data-theme") === "light";
+      const nextTheme = isLight ? "dark" : "light";
+      applyTheme(nextTheme);
+      try {
+        localStorage.setItem(storageKey, nextTheme);
+      } catch (e) {}
+    });
+
+    try {
+      prefersDark.addEventListener("change", (e) => {
+        if (!localStorage.getItem(storageKey)) {
+          applyTheme(e.matches ? "dark" : "light");
+        }
+      });
+    } catch (e) {}
   }
 
   /* ---------- 3. Loading screen ---------- */

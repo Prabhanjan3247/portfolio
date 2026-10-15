@@ -43,6 +43,7 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background var(--dur-med) var(--ease), color var(--dur-med) var(--ease);
 }
 
 img { display: block; }
@@ -98,6 +99,45 @@ input:focus, textarea:focus { outline: none; }
   --z-progress: 700;
   --z-nav: 500;
   --z-back-to-top: 400;
+}
+
+/* Light theme overrides */
+[data-theme="light"] {
+  --bg: #F8FAFC;
+  --bg-soft: #EDF2F7;
+  --card: #FFFFFF;
+  --card-hover: #F8FAFC;
+  --border: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(15, 23, 42, 0.16);
+  --accent: #2563EB;
+  --accent-rgb: 37, 99, 235;
+  --accent-2: #7C3AED;
+  --accent-2-rgb: 124, 58, 237;
+  --text: #0F172A;
+  --text-secondary: #475569;
+  --text-tertiary: #64748B;
+}
+
+[data-theme="light"] .card {
+  box-shadow: 0 4px 16px -4px rgba(15, 23, 42, 0.06);
+}
+
+[data-theme="light"] .chip {
+  color: #1d4ed8;
+  background: rgba(37, 99, 235, 0.08);
+  border-color: rgba(37, 99, 235, 0.22);
+}
+
+[data-theme="light"] .hero__canvas { opacity: 0.45; }
+
+[data-theme="light"] .hero__grid {
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+}
+
+[data-theme="light"] .project-modal__backdrop {
+  background: rgba(15, 23, 42, 0.6);
 }
 
 /* ---------- 3. Typography ---------- */
@@ -316,6 +356,10 @@ html.has-custom-cursor a, html.has-custom-cursor button { cursor: none; }
   -webkit-backdrop-filter: blur(14px) saturate(140%);
   border-bottom-color: var(--border);
 }
+[data-theme="light"] .nav.is-scrolled {
+  background: rgba(248, 250, 252, 0.85);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+}
 .nav__inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 
 .nav__logo { display: flex; align-items: baseline; font-family: var(--font-mono); font-size: 1.1rem; font-weight: 500; letter-spacing: 0.02em; }
@@ -329,8 +373,39 @@ html.has-custom-cursor a, html.has-custom-cursor button { cursor: none; }
 .nav__link.is-active { color: var(--text); }
 .nav__link.is-active::after { right: 0; }
 
-.nav__actions { display: flex; align-items: center; gap: 14px; }
+.nav__actions { display: flex; align-items: center; gap: 12px; }
 .nav__cta { display: none; }
+.nav__theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-strong);
+  background: var(--card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease);
+}
+.nav__theme-toggle:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: scale(1.06);
+}
+.theme-icon {
+  width: 18px;
+  height: 18px;
+  transition: transform var(--dur-fast) var(--ease);
+}
+.nav__theme-toggle:hover .theme-icon {
+  transform: rotate(15deg);
+}
+.nav__theme-toggle .theme-icon--sun { display: block; }
+.nav__theme-toggle .theme-icon--moon { display: none; }
+[data-theme="light"] .nav__theme-toggle .theme-icon--sun { display: none; }
+[data-theme="light"] .nav__theme-toggle .theme-icon--moon { display: block; }
+
 .nav__toggle { display: flex; padding: 6px; }
 
 /* ---------- 10. Hero ---------- */
@@ -469,8 +544,27 @@ html.has-custom-cursor a, html.has-custom-cursor button { cursor: none; }
 
 .project-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
 
-.project-card { overflow: hidden; display: flex; flex-direction: column; }
-.project-card:hover { transform: translateY(-6px); border-color: var(--border-strong); background: var(--card-hover); }
+.project-card {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--dur-med) var(--ease), border-color var(--dur-med) var(--ease), background var(--dur-med) var(--ease), box-shadow var(--dur-med) var(--ease);
+}
+.project-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent);
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.45);
+  background: var(--card-hover);
+}
+[data-theme="light"] .project-card:hover {
+  box-shadow: 0 16px 36px -12px rgba(15, 23, 42, 0.12);
+}
+.project-card__image svg {
+  transition: transform var(--dur-med) var(--ease);
+}
+.project-card:hover .project-card__image svg {
+  transform: scale(1.08);
+}
 .project-card.is-hidden { display: none; }
 
 .project-card__image {
@@ -670,11 +764,102 @@ html.has-custom-cursor a, html.has-custom-cursor button { cursor: none; }
 .activities__note { margin-top: 28px; font-size: 0.9rem; color: var(--text-tertiary); text-align: center; }
 
 /* ---------- 17. Resume ---------- */
-.resume-card { padding: 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 24px; }
-.resume-card .icon--lg { flex-shrink: 0; }
-.resume-card__text { flex: 1 1 260px; }
-.resume-card__text p { margin-top: 4px; }
-.resume-card__actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.resume-card {
+  padding: 38px 42px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.resume-card__preview {
+  flex-shrink: 0;
+  perspective: 700px;
+}
+.resume-preview-doc {
+  width: 135px;
+  height: 175px;
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.35);
+  transform: rotate(-3deg);
+  transition: transform var(--dur-med) var(--ease), box-shadow var(--dur-med) var(--ease), border-color var(--dur-med) var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.resume-preview-doc::before {
+  content: "PDF";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.12);
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid rgba(var(--accent-rgb), 0.25);
+}
+.resume-card:hover .resume-preview-doc {
+  transform: rotate(0deg) translateY(-4px) scale(1.03);
+  border-color: var(--accent);
+  box-shadow: 0 18px 36px -8px rgba(var(--accent-rgb), 0.25);
+}
+.resume-preview-doc__header {
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid var(--accent);
+  max-width: 80px;
+}
+.resume-preview-doc__name {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.resume-preview-doc__role {
+  font-size: 0.44rem;
+  color: var(--accent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+.resume-preview-doc__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+.resume-preview-doc__line {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--border-strong);
+  transition: background var(--dur-fast) var(--ease);
+}
+.resume-card:hover .resume-preview-doc__line {
+  background: rgba(var(--accent-rgb), 0.35);
+}
+.resume-preview-doc__line--full { width: 100%; }
+.resume-preview-doc__line--med { width: 75%; }
+.resume-preview-doc__line--short { width: 45%; }
+.resume-preview-doc__divider {
+  height: 1px;
+  background: var(--border);
+  margin-block: 2px;
+}
+.resume-card__text { flex: 1 1 280px; }
+.resume-card__text p { margin-top: 6px; font-size: 0.96rem; line-height: 1.6; }
+.resume-card__actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
 
 /* ---------- 18. Contact ---------- */
 .contact__grid { display: grid; grid-template-columns: 1fr; gap: 32px; }
@@ -811,7 +996,7 @@ html.has-custom-cursor a, html.has-custom-cursor button { cursor: none; }
     flex-direction: column;
     align-items: flex-start;
     gap: 0;
-    background: rgba(9, 9, 11, 0.98);
+    background: var(--bg);
     backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
     padding: 8px 24px 24px;

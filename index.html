@@ -15,15 +15,15 @@
   <meta property="og:description" content="Building intelligent systems at the intersection of electronics, embedded engineering and software. ECE student at PES University · RTLS Intern at Cummins India.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://prabhanjan3247.github.io/portfolio/">
-  <meta property="og:image" content="https://prabhanjan3247.github.io/portfolio/assets/images/profile.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="1200">
+  <meta property="og:image" content="https://prabhanjan3247.github.io/portfolio/assets/images/og-banner.jpg">
+  <meta property="og:image:width" content="1792">
+  <meta property="og:image:height" content="1024">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Prabhanjan P Katti — ECE Engineer &amp; Software Developer">
   <meta name="twitter:description" content="Building intelligent systems at the intersection of electronics, embedded engineering and software.">
-  <meta name="twitter:image" content="https://prabhanjan3247.github.io/portfolio/assets/images/profile.jpg">
+  <meta name="twitter:image" content="https://prabhanjan3247.github.io/portfolio/assets/images/og-banner.jpg">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
@@ -34,6 +34,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('portfolio-theme');
+        if (t === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
 
   <!-- Structured data for SEO -->
   <script type="application/ld+json">
@@ -99,6 +109,8 @@
       <symbol id="icon-send" viewBox="0 0 24 24"><line x1="21" y1="3" x2="10" y2="14"/><path d="M21 3l-7 18-4-8-8-4 19-6z"/></symbol>
       <symbol id="icon-scroll" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="5"/><line x1="12" y1="7.5" x2="12" y2="11"/></symbol>
       <symbol id="icon-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+      <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></symbol>
+      <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
     </defs>
   </svg>
 
@@ -122,6 +134,10 @@
 
       <div class="nav__actions">
         <a href="#contact" class="btn btn--sm btn--primary nav__cta">Let's talk</a>
+        <button class="nav__theme-toggle" id="themeToggle" aria-label="Switch to light mode" title="Toggle theme">
+          <svg class="icon theme-icon theme-icon--sun"><use href="#icon-sun"></use></svg>
+          <svg class="icon theme-icon theme-icon--moon"><use href="#icon-moon"></use></svg>
+        </button>
         <button class="nav__toggle" id="navToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="navLinks">
           <svg class="icon"><use href="#icon-menu"></use></svg>
         </button>
@@ -670,7 +686,29 @@
     <section class="section section--alt" id="resume">
       <div class="container">
         <div class="resume-card card" data-reveal>
-          <svg class="icon icon--lg"><use href="#icon-file"></use></svg>
+          <!-- PDF visual preview panel -->
+          <div class="resume-card__preview" aria-hidden="true">
+            <div class="resume-preview-doc">
+              <div class="resume-preview-doc__header">
+                <div class="resume-preview-doc__name">Prabhanjan P Katti</div>
+                <div class="resume-preview-doc__role">ECE Engineer &amp; Software Developer</div>
+              </div>
+              <div class="resume-preview-doc__lines">
+                <div class="resume-preview-doc__line resume-preview-doc__line--full"></div>
+                <div class="resume-preview-doc__line resume-preview-doc__line--med"></div>
+                <div class="resume-preview-doc__line resume-preview-doc__line--short"></div>
+                <div class="resume-preview-doc__divider"></div>
+                <div class="resume-preview-doc__line resume-preview-doc__line--full"></div>
+                <div class="resume-preview-doc__line resume-preview-doc__line--med"></div>
+                <div class="resume-preview-doc__line resume-preview-doc__line--full"></div>
+                <div class="resume-preview-doc__line resume-preview-doc__line--short"></div>
+                <div class="resume-preview-doc__divider"></div>
+                <div class="resume-preview-doc__line resume-preview-doc__line--full"></div>
+                <div class="resume-preview-doc__line resume-preview-doc__line--med"></div>
+              </div>
+            </div>
+          </div>
+
           <div class="resume-card__text">
             <h2 class="section__title section__title--sm">Resume &amp; Credentials</h2>
             <p>Comprehensive overview of my education, Cummins India internship, technical skills, and coursework in a single PDF document.</p>
