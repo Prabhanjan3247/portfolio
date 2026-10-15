@@ -266,19 +266,50 @@
     function closeMenu() {
       links.classList.remove("is-open");
       toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "Open navigation menu");
       toggle.innerHTML = '<svg class="icon"><use href="#icon-menu"></use></svg>';
+    }
+
+    function openMenu() {
+      links.classList.add("is-open");
+      toggle.setAttribute("aria-expanded", "true");
+      toggle.setAttribute("aria-label", "Close navigation menu");
+      toggle.innerHTML = '<svg class="icon"><use href="#icon-close"></use></svg>';
     }
 
     if (toggle && links) {
       toggle.addEventListener("click", () => {
-        const isOpen = links.classList.toggle("is-open");
-        toggle.setAttribute("aria-expanded", String(isOpen));
-        toggle.innerHTML = isOpen
-          ? '<svg class="icon"><use href="#icon-close"></use></svg>'
-          : '<svg class="icon"><use href="#icon-menu"></use></svg>';
+        const isOpen = links.classList.contains("is-open");
+        if (isOpen) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
       });
 
       $$("[data-nav]", links).forEach((link) => link.addEventListener("click", closeMenu));
+
+      // Keyboard accessibility: Escape closes mobile menu and returns focus
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && links.classList.contains("is-open")) {
+          closeMenu();
+          toggle.focus();
+        }
+      });
+
+      // Close when clicking outside of navbar
+      document.addEventListener("click", (e) => {
+        if (links.classList.contains("is-open") && !nav.contains(e.target)) {
+          closeMenu();
+        }
+      });
+
+      // Auto-close if screen is resized back to desktop
+      window.addEventListener("resize", () => {
+        if (window.innerWidth >= 1024 && links.classList.contains("is-open")) {
+          closeMenu();
+        }
+      });
     }
 
     // Highlight the nav link for whichever section is currently in view
@@ -580,11 +611,13 @@
     const btn = $("#copyEmailBtn");
     if (!btn) return;
 
-    btn.addEventListener("click", async () => {
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       const email = btn.dataset.copy || "";
-      const badge = $(".copy-badge", btn);
       const iconCopy  = $(".copy-badge__icon-copy",  btn);
       const iconCheck = $(".copy-badge__icon-check", btn);
+      const feedback  = $("#copyFeedback", btn);
 
       try {
         await navigator.clipboard.writeText(email);
@@ -600,16 +633,18 @@
       }
 
       // Show success state
-      if (badge)    badge.classList.add("is-copied");
+      btn.classList.add("is-copied");
       if (iconCopy)  iconCopy.style.display  = "none";
       if (iconCheck) iconCheck.style.display = "";
-      btn.setAttribute("aria-label", "Email copied!");
+      if (feedback)  feedback.textContent   = "Copied!";
+      btn.setAttribute("aria-label", "Email copied to clipboard!");
 
       // Reset after 2 s
       setTimeout(() => {
-        if (badge)    badge.classList.remove("is-copied");
+        btn.classList.remove("is-copied");
         if (iconCopy)  iconCopy.style.display  = "";
         if (iconCheck) iconCheck.style.display = "none";
+        if (feedback)  feedback.textContent   = "Copy";
         btn.setAttribute("aria-label", "Copy email address to clipboard");
       }, 2000);
     });
