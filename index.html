@@ -898,22 +898,17 @@
 
         <div class="contact__grid">
           <div class="contact__info" data-reveal>
-            <div class="contact-item contact-item--hybrid">
-              <a href="mailto:prabhanjank6080@gmail.com" class="contact-item__main" aria-label="Send email to prabhanjank6080@gmail.com">
-                <svg class="icon"><use href="#icon-mail"></use></svg>
-                <div>
-                  <span class="contact-item__label">Direct Email</span>
-                  <span class="contact-item__value">prabhanjank6080@gmail.com</span>
-                </div>
-              </a>
-              <button type="button" class="copy-btn" id="copyEmailBtn" aria-label="Copy email address to clipboard" data-copy="prabhanjank6080@gmail.com" title="Copy email address">
-                <span class="copy-badge" aria-hidden="true">
-                  <svg class="icon icon--sm copy-badge__icon-copy"><use href="#icon-copy"></use></svg>
-                  <svg class="icon icon--sm copy-badge__icon-check" style="display:none"><use href="#icon-check"></use></svg>
-                </span>
-                <span class="copy-feedback" id="copyFeedback">Copy</span>
-              </button>
-            </div>
+            <button class="contact-item contact-item--copy" id="copyEmailBtn" aria-label="Copy email address to clipboard" data-copy="prabhanjank6080@gmail.com">
+              <svg class="icon"><use href="#icon-mail"></use></svg>
+              <div>
+                <span class="contact-item__label">Direct Email <span class="copy-hint">(click to copy)</span></span>
+                <span class="contact-item__value">prabhanjank6080@gmail.com</span>
+              </div>
+              <span class="copy-badge" aria-hidden="true">
+                <svg class="icon icon--sm copy-badge__icon-copy"><use href="#icon-copy"></use></svg>
+                <svg class="icon icon--sm copy-badge__icon-check" style="display:none"><use href="#icon-check"></use></svg>
+              </span>
+            </button>
             <a href="https://www.linkedin.com/in/prabhanjan-katti-b304a933a" class="contact-item" target="_blank" rel="noopener noreferrer">
               <svg class="icon"><use href="#icon-external"></use></svg>
               <div><span class="contact-item__label">LinkedIn</span><span class="contact-item__value">/in/prabhanjan-katti-b304a933a</span></div>

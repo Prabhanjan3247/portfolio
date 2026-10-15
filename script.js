@@ -611,13 +611,11 @@
     const btn = $("#copyEmailBtn");
     if (!btn) return;
 
-    btn.addEventListener("click", async (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+    btn.addEventListener("click", async () => {
       const email = btn.dataset.copy || "";
+      const badge = $(".copy-badge", btn);
       const iconCopy  = $(".copy-badge__icon-copy",  btn);
       const iconCheck = $(".copy-badge__icon-check", btn);
-      const feedback  = $("#copyFeedback", btn);
 
       try {
         await navigator.clipboard.writeText(email);
@@ -633,18 +631,16 @@
       }
 
       // Show success state
-      btn.classList.add("is-copied");
+      if (badge)    badge.classList.add("is-copied");
       if (iconCopy)  iconCopy.style.display  = "none";
       if (iconCheck) iconCheck.style.display = "";
-      if (feedback)  feedback.textContent   = "Copied!";
-      btn.setAttribute("aria-label", "Email copied to clipboard!");
+      btn.setAttribute("aria-label", "Email copied!");
 
       // Reset after 2 s
       setTimeout(() => {
-        btn.classList.remove("is-copied");
+        if (badge)    badge.classList.remove("is-copied");
         if (iconCopy)  iconCopy.style.display  = "";
         if (iconCheck) iconCheck.style.display = "none";
-        if (feedback)  feedback.textContent   = "Copy";
         btn.setAttribute("aria-label", "Copy email address to clipboard");
       }, 2000);
     });
