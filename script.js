@@ -117,6 +117,7 @@
     initProjectFilters();
     initProjectModal();
     initBackToTop();
+    initCopyEmail();
     initContactForm();
     initHeroCanvas();
     initFooterYear();
@@ -525,7 +526,48 @@
     });
   }
 
-  /* ---------- 13. Contact form (Web3Forms async — free, no ads, no activation) ---------- */
+
+  /* ---------- 13. Copy-to-clipboard email button ---------- */
+  function initCopyEmail() {
+    const btn = $("#copyEmailBtn");
+    if (!btn) return;
+
+    btn.addEventListener("click", async () => {
+      const email = btn.dataset.copy || "";
+      const badge = $(".copy-badge", btn);
+      const iconCopy  = $(".copy-badge__icon-copy",  btn);
+      const iconCheck = $(".copy-badge__icon-check", btn);
+
+      try {
+        await navigator.clipboard.writeText(email);
+      } catch {
+        // Fallback for older browsers
+        const ta = document.createElement("textarea");
+        ta.value = email;
+        ta.style.cssText = "position:fixed;opacity:0;pointer-events:none";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+      }
+
+      // Show success state
+      if (badge)    badge.classList.add("is-copied");
+      if (iconCopy)  iconCopy.style.display  = "none";
+      if (iconCheck) iconCheck.style.display = "";
+      btn.setAttribute("aria-label", "Email copied!");
+
+      // Reset after 2 s
+      setTimeout(() => {
+        if (badge)    badge.classList.remove("is-copied");
+        if (iconCopy)  iconCopy.style.display  = "";
+        if (iconCheck) iconCheck.style.display = "none";
+        btn.setAttribute("aria-label", "Copy email address to clipboard");
+      }, 2000);
+    });
+  }
+
+  /* ---------- 14. Contact form (Web3Forms async — free, no ads, no activation) ---------- */
   function initContactForm() {
     const form      = $("#contactForm");
     const status    = $("#formStatus");

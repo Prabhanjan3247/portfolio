@@ -14,13 +14,16 @@
   <meta property="og:title" content="Prabhanjan P Katti — ECE Engineer &amp; Software Developer">
   <meta property="og:description" content="Building intelligent systems at the intersection of electronics, embedded engineering and software. ECE student at PES University · RTLS Intern at Cummins India.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/images/profile.jpg">
+  <meta property="og:url" content="https://prabhanjan3247.github.io/portfolio/">
+  <meta property="og:image" content="https://prabhanjan3247.github.io/portfolio/assets/images/profile.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="1200">
 
   <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Prabhanjan P Katti — ECE Engineer &amp; Software Developer">
   <meta name="twitter:description" content="Building intelligent systems at the intersection of electronics, embedded engineering and software.">
-  <meta name="twitter:image" content="assets/images/profile.jpg">
+  <meta name="twitter:image" content="https://prabhanjan3247.github.io/portfolio/assets/images/profile.jpg">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
@@ -95,6 +98,7 @@
       <symbol id="icon-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><line x1="12" y1="7.5" x2="12" y2="13"/><circle cx="12" cy="16.3" r="0.9" fill="currentColor" stroke="none"/></symbol>
       <symbol id="icon-send" viewBox="0 0 24 24"><line x1="21" y1="3" x2="10" y2="14"/><path d="M21 3l-7 18-4-8-8-4 19-6z"/></symbol>
       <symbol id="icon-scroll" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="5"/><line x1="12" y1="7.5" x2="12" y2="11"/></symbol>
+      <symbol id="icon-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
     </defs>
   </svg>
 
@@ -216,6 +220,20 @@
               <div class="stat">
                 <span class="stat__number">2024 – 2028</span>
                 <span class="stat__label">Undergraduate Candidate</span>
+              </div>
+            </div>
+
+            <!-- GitHub Contribution Graph -->
+            <div class="github-heatmap" data-reveal>
+              <p class="github-heatmap__label"><svg class="icon icon--sm" style="display:inline-block;vertical-align:middle;margin-right:6px"><use href="#icon-code"></use></svg>GitHub activity — <a href="https://github.com/Prabhanjan3247" target="_blank" rel="noopener noreferrer" class="github-heatmap__link">Prabhanjan3247</a></p>
+              <div class="github-heatmap__img-wrap">
+                <img
+                  src="https://ghchart.rshah.org/3B82F6/Prabhanjan3247"
+                  alt="Prabhanjan3247 GitHub contribution chart"
+                  class="github-heatmap__img"
+                  loading="lazy"
+                  onerror="this.closest('.github-heatmap').style.display='none'"
+                >
               </div>
             </div>
           </div>
@@ -695,10 +713,17 @@
               <svg class="icon"><use href="#icon-phone"></use></svg>
               <div><span class="contact-item__label">Phone</span><span class="contact-item__value">+91 93598 18851</span></div>
             </a>
-            <a href="mailto:prabhanjank6080@gmail.com" class="contact-item">
+            <button class="contact-item contact-item--copy" id="copyEmailBtn" aria-label="Copy email address to clipboard" data-copy="prabhanjank6080@gmail.com">
               <svg class="icon"><use href="#icon-mail"></use></svg>
-              <div><span class="contact-item__label">Direct Email</span><span class="contact-item__value">prabhanjank6080@gmail.com</span></div>
-            </a>
+              <div>
+                <span class="contact-item__label">Direct Email <span class="copy-hint">(click to copy)</span></span>
+                <span class="contact-item__value">prabhanjank6080@gmail.com</span>
+              </div>
+              <span class="copy-badge" aria-hidden="true">
+                <svg class="icon icon--sm copy-badge__icon-copy"><use href="#icon-copy"></use></svg>
+                <svg class="icon icon--sm copy-badge__icon-check" style="display:none"><use href="#icon-check"></use></svg>
+              </span>
+            </button>
             <a href="https://www.linkedin.com/in/prabhanjan-katti-b304a933a" class="contact-item" target="_blank" rel="noopener noreferrer">
               <svg class="icon"><use href="#icon-external"></use></svg>
               <div><span class="contact-item__label">LinkedIn</span><span class="contact-item__value">/in/prabhanjan-katti-b304a933a</span></div>
