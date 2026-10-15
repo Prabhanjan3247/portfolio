@@ -19,7 +19,7 @@ portfolio/
 ## Features & Upgrades
 
 1. **Recruiter-Focused Identity**:
-   - Headline: *"Building intelligent systems at the intersection of electronics, embedded engineering and software."*
+   - Headline: *"Building intelligent systems at the intersection of electronics, VLSI and software."*
    - Clear distinction between B.Tech ECE (Major) and Computer Science & Engineering (Academic Minor) at PES University.
    - Grounded metrics without misleading counts or fake claims.
 

@@ -30,7 +30,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 84px;
+  scroll-padding-top: calc(var(--nav-h) + 16px);
   -webkit-text-size-adjust: 100%;
 }
 
@@ -200,7 +200,7 @@ strong { color: var(--text); font-weight: 600; }
   padding-inline: 24px;
 }
 
-.section { padding-block: 96px; position: relative; }
+.section { padding-block: 56px 72px; position: relative; }
 .section--alt { background: var(--bg-soft); }
 
 /* ---------- 5. Buttons, chips, cards ---------- */
@@ -324,6 +324,7 @@ html.has-custom-cursor a, html.has-custom-cursor button { cursor: none; }
   height: 2.5px;
   width: 0%;
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.75);
   z-index: var(--z-progress);
 }
 
@@ -462,6 +463,10 @@ html.has-custom-cursor a, html.has-custom-cursor button { cursor: none; }
 .mcu-status-dot {
   animation: statusBlink 1.8s ease-in-out infinite alternate;
 }
+.rf-wave--1 { animation: rfWavePulse 2.4s ease-out infinite; }
+.rf-wave--2 { animation: rfWavePulse 2.4s ease-out infinite 0.4s; }
+.rf-wave--3 { animation: rfWavePulse 2.4s ease-out infinite 0.8s; }
+
 @keyframes nodePulse {
   0% { r: 3.5; opacity: 0.7; }
   100% { r: 5; opacity: 1; }
@@ -469,6 +474,11 @@ html.has-custom-cursor a, html.has-custom-cursor button { cursor: none; }
 @keyframes statusBlink {
   0% { opacity: 0.35; }
   100% { opacity: 1; }
+}
+@keyframes rfWavePulse {
+  0% { opacity: 0.18; stroke-width: 1.2; }
+  50% { opacity: 0.95; stroke-width: 2; }
+  100% { opacity: 0.18; stroke-width: 1.2; }
 }
 .hero__name { font-size: clamp(1.6rem, 3vw, 2.6rem); line-height: 1.22; margin-bottom: 18px; font-weight: 700; }
 .hero__role { font-size: clamp(1rem, 1.8vw, 1.18rem); color: var(--text-secondary); margin-bottom: 20px; line-height: 1.45; }
@@ -608,6 +618,7 @@ html.has-custom-cursor a, html.has-custom-cursor button { cursor: none; }
 .project-card__image--data { background: linear-gradient(140deg, rgba(var(--accent-rgb), 0.22), rgba(var(--accent-rgb), 0.03)); }
 .project-card__image--mobile { background: linear-gradient(140deg, rgba(var(--accent-2-rgb), 0.22), rgba(var(--accent-2-rgb), 0.03)); }
 .project-card__image--research { background: linear-gradient(140deg, rgba(34, 197, 94, 0.18), rgba(34, 197, 94, 0.03)); }
+.project-card__image--embedded { background: linear-gradient(140deg, rgba(6, 182, 212, 0.22), rgba(59, 130, 246, 0.04)); }
 .project-card__image-tag { position: absolute; top: 14px; left: 16px; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; color: var(--text-tertiary); }
 
 .project-card__body { padding: 24px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
@@ -631,6 +642,7 @@ html.has-custom-cursor a, html.has-custom-cursor button { cursor: none; }
 }
 .project-status--completed { color: #93c5fd; border-color: rgba(59, 130, 246, 0.35); background: rgba(59, 130, 246, 0.08); }
 .project-status--research { color: #86efac; border-color: rgba(34, 197, 94, 0.35); background: rgba(34, 197, 94, 0.08); }
+.project-status--in-progress { color: #fcd34d; border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.08); }
 
 .project-card--future { border-style: dashed; border-color: var(--border-strong); background: transparent; }
 
@@ -752,6 +764,51 @@ html.has-custom-cursor a, html.has-custom-cursor button { cursor: none; }
   font-size: 0.92rem;
   line-height: 1.65;
   color: var(--text-secondary);
+}
+
+/* Architecture visual step pipeline */
+.modal-pipeline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.modal-pipeline__step {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  color: var(--text);
+  line-height: 1.35;
+  transition: border-color var(--dur-fast) var(--ease);
+}
+.modal-pipeline__step:hover {
+  border-color: var(--accent);
+}
+.modal-pipeline__num {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.14);
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+}
+.modal-pipeline__label {
+  font-weight: 500;
+}
+.modal-pipeline__arrow {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.95rem;
+  user-select: none;
 }
 .modal-actions {
   display: flex;
@@ -1033,6 +1090,11 @@ html.has-custom-cursor a, html.has-custom-cursor button { cursor: none; }
     max-width: 440px;
     height: auto;
     filter: drop-shadow(0 12px 36px rgba(0, 0, 0, 0.45));
+    animation: heroSvgDrift 7s ease-in-out infinite alternate;
+  }
+  @keyframes heroSvgDrift {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-5px); }
   }
 
   .about__grid { grid-template-columns: 320px 1fr; }
@@ -1099,7 +1161,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
   [data-reveal] { opacity: 1; transform: none; }
-  .hero__scroll-cue, .pulse-dot::after, .hero__glow, .circuit-pulse-node, .mcu-status-dot, .signal-packet-1, .signal-packet-2 { animation: none !important; }
+  .hero__scroll-cue, .pulse-dot::after, .hero__glow, .circuit-pulse-node, .mcu-status-dot, .signal-packet-1, .signal-packet-2, .rf-wave--1, .rf-wave--2, .rf-wave--3, .hero__svg { animation: none !important; }
 }
 
 @media (pointer: coarse) {

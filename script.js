@@ -88,13 +88,32 @@
       description: "Researched and evaluated Real-Time Location System (RTLS) tracking technologies during the Cummins India internship. Focused on locating Semi-Finished and Finished Goods and tracking Very Narrow Aisle (VNA) truck movement patterns.",
       technologies: ["UWB", "BLE", "RFID", "RTLS", "Industrial IoT", "Material Handling"],
       contribution: "Conducted technical feasibility studies comparing UWB, BLE, and passive/active RFID; evaluated RF line-of-sight and metallic multipath interference on factory floors; studied VNA truck routes to analyze idle time; integrated workplace safety considerations into recommendations.",
-      architecture: "Plant Floor Asset Tagging → Fixed Anchor / Gateway Network (Trilateration & Time-of-Flight evaluation) → Local Processing & Analytics → Plant Inventory & Safety Dashboard.",
+      architecture: "Plant Floor Asset Tagging → Fixed Anchor / Gateway Network → Local Processing & Analytics → Plant Inventory & Safety Dashboard.",
       challenges: "Evaluating wireless propagation in heavy metallic racking environments (G+7 racks) with severe signal occlusion and balancing high location precision against infrastructure deployment costs.",
       outcomes: "Delivered comprehensive technical research reports and technology comparison matrices to guide engineering stakeholders on tracking accuracy, battery life, and safety constraints.",
       status: "Industrial research and engineering evaluation conducted during Cummins India internship (not a commercial software product).",
       repoUrl: null, // Internal company research - no public repository
       demoUrl: null,
       isResearch: true
+    },
+    {
+      id: "project-riscv",
+      title: "RISC-V 32-Bit Processor Subsystem",
+      category: "embedded",
+      categoryLabel: "Hardware & VLSI",
+      badge: "In Progress",
+      badgeType: "in-progress",
+      problem: "Understanding instruction-level execution and digital hardware microarchitecture by designing a synthesizable 32-bit RV32I processor core from RTL specifications.",
+      description: "Designing and simulating a 32-bit single-cycle RISC-V (RV32I) processor core using SystemVerilog. Implementing instruction decoding, a parameterized Arithmetic Logic Unit (ALU), multi-port register files, and control logic with automated testbench verification.",
+      technologies: ["SystemVerilog", "Xilinx Vivado", "Computer Architecture", "ModelSim", "RTL Verification", "Digital Logic"],
+      contribution: "Authoring modular SystemVerilog RTL for the 32-bit ALU, register files, immediate generator, and branch control logic; developing structured testbench suites to verify R-type, I-type, and load/store instruction sequences.",
+      architecture: "Instruction Fetch (PC & Memory) → Instruction Decode & RegFile Read → ALU Execution & Branch Logic → Data Memory Access → Register Writeback.",
+      challenges: "Handling corner-case arithmetic overflows, managing synchronous vs asynchronous reset behaviors in register files, and ensuring timing closure under simulated clock constraints.",
+      outcomes: "Active implementation targeting verified zero-error execution for fundamental arithmetic, logical, and branch instructions with waveform validation across Vivado testbenches.",
+      status: "Active implementation: SystemVerilog RTL design and testbench verification in Xilinx Vivado. Open-source repository will be linked upon simulation sign-off.",
+      repoUrl: null,
+      demoUrl: null,
+      isResearch: false
     }
   ];
 
@@ -112,6 +131,7 @@
     initCustomCursor();
     initProgressBar();
     initNavbar();
+    initSmoothScroll();
     initTypingEffect();
     initScrollReveal();
     initCounters();
@@ -332,6 +352,64 @@
     sections.forEach((section) => observer.observe(section));
   }
 
+  /* ---------- 6.5 Smooth Scrolling & Section Centering ---------- */
+  function initSmoothScroll() {
+    function scrollToTarget(hash) {
+      if (!hash || hash === "#") return;
+      if (hash === "#home" || hash === "#main") {
+        window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
+        return;
+      }
+
+      const target = document.querySelector(hash);
+      if (!target) return;
+
+      const nav = $("#nav");
+      const navHeight = nav ? nav.offsetHeight : 76;
+      const container = target.querySelector(".container") || target;
+      const containerRect = container.getBoundingClientRect();
+      const containerTop = containerRect.top + window.scrollY;
+      const containerHeight = container.offsetHeight;
+      const windowHeight = window.innerHeight;
+      const availableHeight = windowHeight - navHeight;
+
+      let targetY;
+      if (containerHeight < availableHeight) {
+        // Center the section content vertically in the space below the navbar
+        const verticalPad = Math.max(16, (availableHeight - containerHeight) / 2);
+        targetY = Math.max(0, containerTop - navHeight - verticalPad);
+      } else {
+        // If content is taller than viewport, align cleanly with breathing room below navbar
+        targetY = Math.max(0, containerTop - navHeight - 16);
+      }
+
+      window.scrollTo({
+        top: Math.round(targetY),
+        behavior: prefersReducedMotion ? "auto" : "smooth"
+      });
+
+      if (history.pushState) {
+        history.pushState(null, "", hash);
+      } else {
+        window.location.hash = hash;
+      }
+    }
+
+    document.addEventListener("click", (e) => {
+      const link = e.target.closest('a[href^="#"]');
+      if (!link) return;
+
+      const href = link.getAttribute("href");
+      if (!href || href === "#" || href.startsWith("#project-")) return;
+
+      const targetEl = document.querySelector(href);
+      if (!targetEl) return;
+
+      e.preventDefault();
+      scrollToTarget(href);
+    });
+  }
+
   /* ---------- 7. Typing effect ---------- */
   function initTypingEffect() {
     const el = $("#typedText");
@@ -509,7 +587,15 @@
 
         <div class="modal-section">
           <h3 class="modal-section__title"><svg class="icon icon--sm"><use href="#icon-cpu"></use></svg> Architecture &amp; Implementation</h3>
-          <p>${project.architecture}</p>
+          <div class="modal-pipeline">
+            ${project.architecture.split(" → ").map((step, idx, arr) => `
+              <div class="modal-pipeline__step">
+                <span class="modal-pipeline__num">0${idx + 1}</span>
+                <span class="modal-pipeline__label">${step}</span>
+              </div>
+              ${idx < arr.length - 1 ? `<span class="modal-pipeline__arrow" aria-hidden="true">→</span>` : ""}
+            `).join("")}
+          </div>
         </div>
 
         <div class="modal-section">

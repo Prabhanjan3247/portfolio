@@ -15,7 +15,7 @@
 
   <!-- Open Graph / Social Cards -->
   <meta property="og:title" content="Prabhanjan P Katti — ECE Engineer &amp; Software Developer">
-  <meta property="og:description" content="Building intelligent systems at the intersection of electronics, embedded engineering and software. ECE student at PES University · Ex-Intern @ Cummins India.">
+  <meta property="og:description" content="Building intelligent systems at the intersection of electronics, VLSI and software. ECE student at PES University · Ex-Intern @ Cummins India.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://prabhanjan3247.github.io/portfolio/">
   <meta property="og:site_name" content="Prabhanjan P Katti Portfolio">
@@ -31,7 +31,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://prabhanjan3247.github.io/portfolio/">
   <meta name="twitter:title" content="Prabhanjan P Katti — ECE Engineer &amp; Software Developer">
-  <meta name="twitter:description" content="Building intelligent systems at the intersection of electronics, embedded engineering and software.">
+  <meta name="twitter:description" content="Building intelligent systems at the intersection of electronics, VLSI and software.">
   <meta name="twitter:image" content="https://prabhanjan3247.github.io/portfolio/assets/images/og-banner.jpg">
   <meta name="twitter:image:alt" content="Prabhanjan P Katti — ECE Engineer &amp; Software Developer Portfolio Banner">
 
@@ -166,7 +166,7 @@
       <div class="container hero__container">
         <div class="hero__content" data-reveal>
           <p class="eyebrow"><span class="pulse-dot"></span>Prabhanjan P Katti</p>
-          <h1 class="hero__name">Building intelligent systems at the intersection of electronics, embedded engineering and software.</h1>
+          <h1 class="hero__name">Building intelligent systems at the intersection of electronics, VLSI and software.</h1>
           <p class="hero__role">Electronics &amp; Communication Engineering Undergraduate <span class="hero__role-sep">·</span> Ex-Intern @ Cummins India</p>
 
           <p class="hero__typed">
@@ -237,9 +237,9 @@
             <circle cx="370" cy="325" r="3" fill="#09090B" stroke="#3B82F6" stroke-width="1.5"/>
 
             <!-- RF Antenna Waves -->
-            <path d="M 388 205 A 12 12 0 0 1 388 225" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.85"/>
-            <path d="M 398 197 A 21 21 0 0 1 398 233" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.55"/>
-            <path d="M 408 189 A 30 30 0 0 1 408 241" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.3"/>
+            <path class="rf-wave rf-wave--1" d="M 388 205 A 12 12 0 0 1 388 225" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.85"/>
+            <path class="rf-wave rf-wave--2" d="M 398 197 A 21 21 0 0 1 398 233" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.55"/>
+            <path class="rf-wave rf-wave--3" d="M 408 189 A 30 30 0 0 1 408 241" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.3"/>
 
             <!-- South Traces (Bus: I2C, SPI, UART) -->
             <path d="M 195 305 L 195 355 L 165 385 L 115 385" stroke="rgba(59, 130, 246, 0.35)" stroke-width="1.5" stroke-linecap="round"/>
@@ -428,10 +428,10 @@
               </div>
               <ul class="timeline__list">
                 <li>Researched Real-Time Location System (RTLS) technologies to track engine manufacturing assets — Semi-Finished and Finished Goods — across a multi-tier (G+7) racking system on the active plant floor.</li>
-                <li>Monitoring Material Handling Equipment (MHE), including Very Narrow Aisle (VNA) trucks, to analyze transit routes, evaluate equipment utilization, and assess idle time patterns.</li>
-                <li>Researching and evaluating comparative trade-offs between Ultra-Wideband (UWB), Bluetooth Low Energy (BLE), and Radio-Frequency Identification (RFID) for high-precision industrial asset tracking.</li>
-                <li>Incorporating plant-floor workplace safety, line-of-sight RF obstruction profiles, and industrial hazard prevention into technology placement strategies.</li>
-                <li>Synthesizing technical research and authoring structured engineering reports summarizing technology benchmarks and deployment trade-offs for stakeholders.</li>
+                <li>Monitored Material Handling Equipment (MHE), including Very Narrow Aisle (VNA) trucks, to analyze transit routes, evaluate equipment utilization, and assess idle time patterns.</li>
+                <li>Researched and evaluated comparative trade-offs between Ultra-Wideband (UWB), Bluetooth Low Energy (BLE), and Radio-Frequency Identification (RFID) for high-precision industrial asset tracking.</li>
+                <li>Incorporated plant-floor workplace safety, line-of-sight RF obstruction profiles, and industrial hazard prevention into technology placement strategies.</li>
+                <li>Synthesized technical research and authored structured engineering reports summarizing technology benchmarks and deployment trade-offs for stakeholders.</li>
               </ul>
               <div class="chip-row">
                 <span class="chip chip--mono">RFID</span>
@@ -455,6 +455,7 @@
 
         <div class="project-filters" data-reveal role="group" aria-label="Filter projects by category">
           <button class="filter-btn is-active" data-filter="all" aria-pressed="true">All</button>
+          <button class="filter-btn" data-filter="embedded" aria-pressed="false">Hardware &amp; VLSI</button>
           <button class="filter-btn" data-filter="data" aria-pressed="false">Data &amp; ML</button>
           <button class="filter-btn" data-filter="mobile" aria-pressed="false">Mobile</button>
           <button class="filter-btn" data-filter="research" aria-pressed="false">Research</button>
@@ -539,6 +540,32 @@
               <div class="project-card__actions">
                 <button type="button" class="btn btn--sm btn--primary" data-project-id="project-rtls">
                   View Case Study
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- 4. RISC-V 32-Bit Processor Subsystem -->
+          <article class="project-card card" data-category="embedded" data-reveal>
+            <div class="project-card__image project-card__image--embedded">
+              <span class="project-card__image-tag">// HARDWARE &amp; VLSI</span>
+              <svg class="icon icon--lg"><use href="#icon-cpu"></use></svg>
+            </div>
+            <div class="project-card__body">
+              <div class="project-card__header">
+                <h3 class="project-card__title">RISC-V 32-Bit Processor Subsystem</h3>
+                <span class="project-status project-status--in-progress">In Progress</span>
+              </div>
+              <p class="project-card__desc">Designing and simulating a 32-bit single-cycle RISC-V (RV32I) processor core in SystemVerilog, implementing instruction decoding, ALU execution, and testbench verification in Xilinx Vivado.</p>
+              <div class="chip-row">
+                <span class="chip chip--sm">SystemVerilog</span>
+                <span class="chip chip--sm">Xilinx Vivado</span>
+                <span class="chip chip--sm">RTL Design</span>
+                <span class="chip chip--sm">ModelSim</span>
+              </div>
+              <div class="project-card__actions">
+                <button type="button" class="btn btn--sm btn--primary" data-project-id="project-riscv">
+                  View Details
                 </button>
               </div>
             </div>
