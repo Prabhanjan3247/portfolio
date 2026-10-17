@@ -333,23 +333,38 @@
     }
 
     // Highlight the nav link for whichever section is currently in view
-    const sections = $$("main section[id]");
     const navLinks = $$("[data-nav]");
+    const navSectionIds = new Set(navLinks.map((link) => (link.getAttribute("href") || "").replace(/^#/, "")));
+    const sections = $$("main section[id]").filter((sec) => navSectionIds.has(sec.id));
     if (!sections.length || !navLinks.length) return;
+
+    function setActiveLink(id) {
+      navLinks.forEach((link) => {
+        link.classList.toggle("is-active", link.getAttribute("href") === `#${id}`);
+      });
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
           const id = entry.target.getAttribute("id");
-          navLinks.forEach((link) => {
-            link.classList.toggle("is-active", link.getAttribute("href") === `#${id}`);
-          });
+          if (id) setActiveLink(id);
         });
       },
-      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+      { rootMargin: "-30% 0px -55% 0px", threshold: 0 }
     );
     sections.forEach((section) => observer.observe(section));
+
+    // Handle scroll boundaries: top of page activates home, bottom activates contact
+    window.addEventListener("scroll", () => {
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60;
+      if (atBottom) {
+        setActiveLink("contact");
+      } else if (window.scrollY < 80) {
+        setActiveLink("home");
+      }
+    }, { passive: true });
   }
 
   /* ---------- 6.5 Smooth Scrolling & Section Centering ---------- */
