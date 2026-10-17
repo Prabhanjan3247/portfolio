@@ -259,13 +259,21 @@
     const bar = $("#progressBar");
     if (!bar) return;
 
+    let ticking = false;
     function update() {
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
       bar.style.width = `${clamp(pct, 0, 100)}%`;
+      ticking = false;
     }
-    window.addEventListener("scroll", update, { passive: true });
+
+    window.addEventListener("scroll", () => {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    }, { passive: true });
     window.addEventListener("resize", update);
     update();
   }
@@ -277,10 +285,17 @@
     const links = $("#navLinks");
     if (!nav) return;
 
+    let navTicking = false;
     function onScroll() {
       nav.classList.toggle("is-scrolled", window.scrollY > 20);
+      navTicking = false;
     }
-    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("scroll", () => {
+      if (!navTicking) {
+        requestAnimationFrame(onScroll);
+        navTicking = true;
+      }
+    }, { passive: true });
     onScroll();
 
     const backdrop = $("#navBackdrop");
@@ -367,12 +382,19 @@
     sections.forEach((section) => observer.observe(section));
 
     // Handle scroll boundaries: top of page activates home, bottom activates contact
+    let boundTicking = false;
     window.addEventListener("scroll", () => {
-      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60;
-      if (atBottom) {
-        setActiveLink("contact");
-      } else if (window.scrollY < 80) {
-        setActiveLink("home");
+      if (!boundTicking) {
+        requestAnimationFrame(() => {
+          const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60;
+          if (atBottom) {
+            setActiveLink("contact");
+          } else if (window.scrollY < 80) {
+            setActiveLink("home");
+          }
+          boundTicking = false;
+        });
+        boundTicking = true;
       }
     }, { passive: true });
   }
@@ -875,7 +897,7 @@
     let isVisible = true;
 
     function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = width < 768 ? 1 : Math.min(window.devicePixelRatio || 1, 2);
       width = hero.clientWidth;
       height = hero.clientHeight;
       canvas.width = width * dpr;
@@ -887,7 +909,7 @@
     }
 
     function buildAnchors() {
-      const count = width < 640 ? 5 : width < 1024 ? 7 : 9;
+      const count = width < 640 ? 4 : width < 1024 ? 6 : 8;
       anchors = [];
       for (let i = 0; i < count; i++) {
         anchors.push({
@@ -902,14 +924,14 @@
       ctx.clearRect(0, 0, width, height);
 
       // Faint connective mesh between anchors within signal range
-      const maxDist = width < 640 ? 220 : 320;
+      const maxDist = width < 640 ? 200 : 320;
       for (let i = 0; i < anchors.length; i++) {
         for (let j = i + 1; j < anchors.length; j++) {
           const a = anchors[i];
           const b = anchors[j];
           const dist = Math.hypot(a.x - b.x, a.y - b.y);
           if (dist < maxDist) {
-            ctx.strokeStyle = `rgba(${ACCENT}, ${(1 - dist / maxDist) * 0.18})`;
+            ctx.strokeStyle = `rgba(${ACCENT}, ${(1 - dist / maxDist) * 0.16})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
@@ -929,8 +951,8 @@
         ctx.fill();
 
         ctx.beginPath();
-        ctx.arc(a.x, a.y, 6 + pulse * 16, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${ACCENT}, ${0.22 * (1 - pulse)})`;
+        ctx.arc(a.x, a.y, 6 + pulse * 14, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(${ACCENT}, ${0.2 * (1 - pulse)})`;
         ctx.stroke();
       });
 
@@ -950,7 +972,7 @@
 
         ctx.setLineDash([3, 5]);
         nearest.forEach((a) => {
-          ctx.strokeStyle = `rgba(${ACCENT_2}, 0.3)`;
+          ctx.strokeStyle = `rgba(${ACCENT_2}, 0.28)`;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(tx, ty);
@@ -959,18 +981,38 @@
         ctx.setLineDash([]);
 
         ctx.beginPath();
-        ctx.arc(tx, ty, 4.5, 0, Math.PI * 2);
+        ctx.arc(tx, ty, 4, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${ACCENT_2}, 1)`;
-        ctx.shadowColor = `rgba(${ACCENT_2}, 0.9)`;
-        ctx.shadowBlur = 12;
+        if (width >= 768) {
+          ctx.shadowColor = `rgba(${ACCENT_2}, 0.9)`;
+          ctx.shadowBlur = 10;
+        }
         ctx.fill();
-        ctx.shadowBlur = 0;
+        if (width >= 768) ctx.shadowBlur = 0;
       }
     }
 
+    let animId = null;
     function loop(time) {
-      if (isVisible) draw(time);
-      requestAnimationFrame(loop);
+      if (isVisible) {
+        draw(time);
+        animId = requestAnimationFrame(loop);
+      } else {
+        animId = null;
+      }
+    }
+
+    function startLoop() {
+      if (!animId && isVisible) {
+        animId = requestAnimationFrame(loop);
+      }
+    }
+
+    function stopLoop() {
+      if (animId) {
+        cancelAnimationFrame(animId);
+        animId = null;
+      }
     }
 
     resize();
@@ -983,9 +1025,14 @@
 
     new IntersectionObserver((entries) => {
       isVisible = entries[0].isIntersecting;
+      if (isVisible) {
+        startLoop();
+      } else {
+        stopLoop();
+      }
     }).observe(hero);
 
-    requestAnimationFrame(loop);
+    startLoop();
   }
 
   /* ---------- 15. Footer year ---------- */
