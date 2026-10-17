@@ -132,15 +132,57 @@
       </a>
 
       <nav class="nav__links" id="navLinks" aria-label="Primary navigation">
-        <a href="#home" class="nav__link is-active" data-nav>Home</a>
-        <a href="#about" class="nav__link" data-nav>About</a>
-        <a href="#experience" class="nav__link" data-nav>Experience</a>
-        <a href="#projects" class="nav__link" data-nav>Projects</a>
-        <a href="#skills" class="nav__link" data-nav>Skills</a>
-        <a href="#certifications" class="nav__link" data-nav>Certifications</a>
-        <a href="#education" class="nav__link" data-nav>Education</a>
-        <a href="#contact" class="nav__link" data-nav>Contact</a>
+        <div class="nav__links-header">
+          <span class="nav__links-title">Menu</span>
+          <span class="nav__links-subtitle">Navigation</span>
+        </div>
+        <a href="#home" class="nav__link is-active" data-nav>
+          <span class="nav__link-dot" aria-hidden="true"></span>
+          <span class="nav__link-text">Home</span>
+          <span class="nav__link-arrow" aria-hidden="true">›</span>
+        </a>
+        <a href="#about" class="nav__link" data-nav>
+          <span class="nav__link-dot" aria-hidden="true"></span>
+          <span class="nav__link-text">About</span>
+          <span class="nav__link-arrow" aria-hidden="true">›</span>
+        </a>
+        <a href="#experience" class="nav__link" data-nav>
+          <span class="nav__link-dot" aria-hidden="true"></span>
+          <span class="nav__link-text">Experience</span>
+          <span class="nav__link-arrow" aria-hidden="true">›</span>
+        </a>
+        <a href="#projects" class="nav__link" data-nav>
+          <span class="nav__link-dot" aria-hidden="true"></span>
+          <span class="nav__link-text">Projects</span>
+          <span class="nav__link-arrow" aria-hidden="true">›</span>
+        </a>
+        <a href="#skills" class="nav__link" data-nav>
+          <span class="nav__link-dot" aria-hidden="true"></span>
+          <span class="nav__link-text">Skills</span>
+          <span class="nav__link-arrow" aria-hidden="true">›</span>
+        </a>
+        <a href="#certifications" class="nav__link" data-nav>
+          <span class="nav__link-dot" aria-hidden="true"></span>
+          <span class="nav__link-text">Certifications</span>
+          <span class="nav__link-arrow" aria-hidden="true">›</span>
+        </a>
+        <a href="#education" class="nav__link" data-nav>
+          <span class="nav__link-dot" aria-hidden="true"></span>
+          <span class="nav__link-text">Education</span>
+          <span class="nav__link-arrow" aria-hidden="true">›</span>
+        </a>
+        <a href="#contact" class="nav__link" data-nav>
+          <span class="nav__link-dot" aria-hidden="true"></span>
+          <span class="nav__link-text">Contact</span>
+          <span class="nav__link-arrow" aria-hidden="true">›</span>
+        </a>
+        <div class="nav__links-footer">
+          <a href="#contact" class="btn btn--primary btn--sm nav__mobile-cta" data-nav>
+            Let's talk <svg class="icon icon--sm"><use href="#icon-arrow-right"></use></svg>
+          </a>
+        </div>
       </nav>
+      <div class="nav__backdrop" id="navBackdrop" aria-hidden="true"></div>
 
       <div class="nav__actions">
         <a href="#contact" class="btn btn--sm btn--primary nav__cta">Let's talk</a>

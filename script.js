@@ -283,8 +283,12 @@
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 
+    const backdrop = $("#navBackdrop");
+
     function closeMenu() {
       links.classList.remove("is-open");
+      if (backdrop) backdrop.classList.remove("is-open");
+      document.body.classList.remove("menu-locked");
       toggle.setAttribute("aria-expanded", "false");
       toggle.setAttribute("aria-label", "Open navigation menu");
       toggle.innerHTML = '<svg class="icon"><use href="#icon-menu"></use></svg>';
@@ -292,9 +296,15 @@
 
     function openMenu() {
       links.classList.add("is-open");
+      if (backdrop) backdrop.classList.add("is-open");
+      document.body.classList.add("menu-locked");
       toggle.setAttribute("aria-expanded", "true");
       toggle.setAttribute("aria-label", "Close navigation menu");
       toggle.innerHTML = '<svg class="icon"><use href="#icon-close"></use></svg>';
+    }
+
+    if (backdrop) {
+      backdrop.addEventListener("click", closeMenu);
     }
 
     if (toggle && links) {
