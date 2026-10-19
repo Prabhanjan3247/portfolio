@@ -137,6 +137,7 @@
     initCounters();
     initProjectFilters();
     initProjectModal();
+    initCommandPalette();
     initBackToTop();
     initCopyEmail();
     initContactForm();
@@ -724,17 +725,475 @@
     }
   }
 
-  /* ---------- 12. Back to top ---------- */
-  function initBackToTop() {
-    const btn = $("#backToTop");
-    if (!btn) return;
+  /* ---------- 12.5 Toast notification utility ---------- */
+  let toastTimer = null;
+  function showToast(message, iconId = "icon-check") {
+    const toast = $("#toastNotification");
+    const textEl = $("#toastNotificationText");
+    const iconEl = toast ? $(".toast__icon use", toast) : null;
+    if (!toast || !textEl) return;
 
-    window.addEventListener("scroll", () => btn.classList.toggle("is-visible", window.scrollY > 480), {
-      passive: true,
+    textEl.textContent = message;
+    if (iconEl) iconEl.setAttribute("href", `#${iconId}`);
+
+    toast.classList.add("is-visible");
+    toast.setAttribute("aria-hidden", "false");
+
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.classList.remove("is-visible");
+      toast.setAttribute("aria-hidden", "true");
+    }, 2800);
+  }
+
+  /* ---------- 12.6 Command Palette (Ctrl+K / Cmd+K) ---------- */
+  function initCommandPalette() {
+    const palette = $("#cmdPalette");
+    const backdrop = $("#cmdPaletteBackdrop");
+    const input = $("#cmdPaletteInput");
+    const results = $("#cmdPaletteResults");
+    const closeBtn = $("#cmdPaletteClose");
+    const openBtn = $("#cmdPaletteBtn");
+    if (!palette || !input || !results) return;
+
+    let selectedIndex = 0;
+    let filteredCommands = [];
+    let previousActiveElement = null;
+
+    // Platform detection for Mac (Cmd vs Ctrl)
+    const isMac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform || navigator.userAgent);
+    $$(".cmd-k-key").forEach((el) => {
+      el.textContent = isMac ? "⌘" : "Ctrl";
     });
 
-    btn.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
+    const commands = [
+      // Quick Actions
+      {
+        id: "act-copy-email",
+        category: "Quick Actions",
+        title: "Copy Email Address",
+        desc: "prabhanjank6080@gmail.com",
+        icon: "icon-copy",
+        keywords: ["email", "copy", "mail", "contact", "address", "prabhanjan"],
+        actionLabel: "Copy",
+        perform: () => {
+          copyTextToClipboard("prabhanjank6080@gmail.com", "Copied prabhanjank6080@gmail.com to clipboard!");
+        }
+      },
+      {
+        id: "act-resume",
+        category: "Quick Actions",
+        title: "Download Resume",
+        desc: "Official Prabhanjan_P_Katti_Resume.pdf",
+        icon: "icon-download",
+        keywords: ["resume", "cv", "download", "pdf", "bio", "grades"],
+        actionLabel: "Download",
+        perform: () => {
+          const a = document.createElement("a");
+          a.href = "assets/resume/resume.pdf";
+          a.download = "Prabhanjan_P_Katti_Resume.pdf";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          showToast("Starting resume download...");
+        }
+      },
+      {
+        id: "act-theme",
+        category: "Quick Actions",
+        title: "Toggle Theme",
+        desc: "Switch between Dark and Light mode",
+        icon: "icon-sun",
+        keywords: ["theme", "dark", "light", "mode", "toggle", "color"],
+        actionLabel: "Toggle",
+        perform: () => {
+          const themeToggle = $("#themeToggle");
+          if (themeToggle) themeToggle.click();
+          const isLight = document.documentElement.getAttribute("data-theme") === "light";
+          showToast(`Switched to ${isLight ? "Light" : "Dark"} mode`);
+        }
+      },
+
+      // Navigation
+      {
+        id: "nav-home",
+        category: "Navigation",
+        title: "Go to Home",
+        desc: "Hero introduction & headline",
+        icon: "icon-arrow-up",
+        keywords: ["home", "top", "hero", "intro", "headline", "start"],
+        actionLabel: "Jump",
+        perform: () => scrollToSection("#home")
+      },
+      {
+        id: "nav-about",
+        category: "Navigation",
+        title: "About Prabhanjan",
+        desc: "Background, PES University, and Cummins overview",
+        icon: "icon-users",
+        keywords: ["about", "bio", "profile", "pes", "cummins", "summary"],
+        actionLabel: "Jump",
+        perform: () => scrollToSection("#about")
+      },
+      {
+        id: "nav-experience",
+        category: "Navigation",
+        title: "Engineering Experience",
+        desc: "Cummins India RTLS internship & plant floor research",
+        icon: "icon-briefcase",
+        keywords: ["experience", "cummins", "internship", "rtls", "work", "job", "mhe"],
+        actionLabel: "Jump",
+        perform: () => scrollToSection("#experience")
+      },
+      {
+        id: "nav-projects",
+        category: "Navigation",
+        title: "Projects",
+        desc: "All VLSI, embedded, ML & software applications",
+        icon: "icon-code",
+        keywords: ["projects", "code", "hardware", "vlsi", "risc-v", "churn", "quiz"],
+        actionLabel: "Jump",
+        perform: () => scrollToSection("#projects")
+      },
+      {
+        id: "nav-skills",
+        category: "Navigation",
+        title: "Technical Skills",
+        desc: "Embedded systems, programming languages, and tools",
+        icon: "icon-cpu",
+        keywords: ["skills", "languages", "c", "python", "verilog", "tableau", "mysql"],
+        actionLabel: "Jump",
+        perform: () => scrollToSection("#skills")
+      },
+      {
+        id: "nav-certifications",
+        category: "Navigation",
+        title: "Verified Credentials",
+        desc: "AWS, Oracle AI, Kaggle, and MathWorks certifications",
+        icon: "icon-award",
+        keywords: ["certifications", "credentials", "aws", "oracle", "kaggle", "forage"],
+        actionLabel: "Jump",
+        perform: () => scrollToSection("#certifications")
+      },
+      {
+        id: "nav-education",
+        category: "Navigation",
+        title: "Education History",
+        desc: "B.Tech ECE, Minor in CSE, Class XII, Class X",
+        icon: "icon-cap",
+        keywords: ["education", "degree", "btech", "pes university", "minor", "school", "gpa"],
+        actionLabel: "Jump",
+        perform: () => scrollToSection("#education")
+      },
+      {
+        id: "nav-activities",
+        category: "Navigation",
+        title: "Activities & Leadership",
+        desc: "IEEE, PESU conferences, student leadership",
+        icon: "icon-trophy",
+        keywords: ["activities", "ieee", "conference", "leadership", "clubs"],
+        actionLabel: "Jump",
+        perform: () => scrollToSection("#activities")
+      },
+      {
+        id: "nav-contact",
+        category: "Navigation",
+        title: "Contact Section",
+        desc: "Direct message form & email contact",
+        icon: "icon-mail",
+        keywords: ["contact", "email", "message", "hire", "talk"],
+        actionLabel: "Jump",
+        perform: () => scrollToSection("#contact")
+      },
+
+      // Projects (Direct Modal Trigger)
+      {
+        id: "cmd-project-rtls",
+        category: "Projects",
+        title: "RTLS Asset Tracking Research",
+        desc: "Industrial research at Cummins India (UWB, BLE, RFID)",
+        icon: "icon-radio",
+        keywords: ["rtls", "cummins", "uwb", "ble", "rfid", "tracking", "vna", "warehouse"],
+        actionLabel: "Open Details",
+        perform: () => triggerProjectModal("project-rtls")
+      },
+      {
+        id: "cmd-project-riscv",
+        category: "Projects",
+        title: "RISC-V 32-Bit Processor Subsystem",
+        desc: "RV32I core design in SystemVerilog & Vivado",
+        icon: "icon-cpu",
+        keywords: ["risc-v", "processor", "systemverilog", "vivado", "cpu", "vlsi", "hardware"],
+        actionLabel: "Open Details",
+        perform: () => triggerProjectModal("project-riscv")
+      },
+      {
+        id: "cmd-project-churn",
+        category: "Projects",
+        title: "Customer Churn Prediction",
+        desc: "ML & exploratory analytics in Python, MySQL, Tableau",
+        icon: "icon-file",
+        keywords: ["churn", "ml", "python", "mysql", "tableau", "analytics", "data"],
+        actionLabel: "Open Details",
+        perform: () => triggerProjectModal("project-churn")
+      },
+      {
+        id: "cmd-project-quiz",
+        category: "Projects",
+        title: "Cross-Platform Quiz App",
+        desc: "Interactive mobile application in Flutter & Dart",
+        icon: "icon-code",
+        keywords: ["quiz", "flutter", "dart", "mobile", "app"],
+        actionLabel: "Open Details",
+        perform: () => triggerProjectModal("project-quiz")
+      },
+
+      // External
+      {
+        id: "ext-github",
+        category: "External Links",
+        title: "GitHub Profile",
+        desc: "github.com/Prabhanjan3247",
+        icon: "icon-code",
+        keywords: ["github", "git", "repo", "source", "code", "profile"],
+        actionLabel: "Open",
+        perform: () => window.open("https://github.com/Prabhanjan3247", "_blank", "noopener,noreferrer")
+      },
+      {
+        id: "ext-linkedin",
+        category: "External Links",
+        title: "LinkedIn Profile",
+        desc: "linkedin.com/in/prabhanjan-katti-b304a933a",
+        icon: "icon-external",
+        keywords: ["linkedin", "network", "connect", "profile", "social"],
+        actionLabel: "Open",
+        perform: () => window.open("https://www.linkedin.com/in/prabhanjan-katti-b304a933a", "_blank", "noopener,noreferrer")
+      }
+    ];
+
+    function copyTextToClipboard(text, successMsg) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(successMsg);
+        }).catch(() => fallbackCopy(text, successMsg));
+      } else {
+        fallbackCopy(text, successMsg);
+      }
+    }
+
+    function fallbackCopy(text, successMsg) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.cssText = "position:fixed;opacity:0;pointer-events:none";
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        showToast(successMsg);
+      } catch (err) {
+        showToast("Press Ctrl+C to copy: " + text);
+      }
+      ta.remove();
+    }
+
+    function scrollToSection(selector) {
+      const el = $(selector);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+
+    function triggerProjectModal(projectId) {
+      const btn = $(`[data-project-id="${projectId}"]`);
+      if (btn) {
+        btn.click();
+      } else {
+        window.location.hash = `#${projectId}`;
+      }
+    }
+
+    function openPalette() {
+      previousActiveElement = document.activeElement;
+      palette.classList.add("is-open");
+      palette.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      input.value = "";
+      filterAndRender("");
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function closePalette() {
+      if (!palette.classList.contains("is-open")) return;
+      palette.classList.remove("is-open");
+      palette.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      if (previousActiveElement && typeof previousActiveElement.focus === "function") {
+        previousActiveElement.focus();
+      }
+    }
+
+    function filterAndRender(query) {
+      const q = query.trim().toLowerCase();
+      if (!q) {
+        filteredCommands = commands;
+      } else {
+        filteredCommands = commands.filter((cmd) => {
+          if (cmd.title.toLowerCase().includes(q)) return true;
+          if (cmd.desc.toLowerCase().includes(q)) return true;
+          if (cmd.category.toLowerCase().includes(q)) return true;
+          if (cmd.keywords && cmd.keywords.some((k) => k.toLowerCase().includes(q))) return true;
+          return false;
+        });
+      }
+
+      selectedIndex = 0;
+      renderResults();
+    }
+
+    function renderResults() {
+      if (filteredCommands.length === 0) {
+        results.innerHTML = `
+          <div class="cmd-palette__empty">
+            <svg class="icon icon--lg cmd-palette__empty-icon"><use href="#icon-alert"></use></svg>
+            <p>No commands or results found</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Group by category
+      const groups = {};
+      filteredCommands.forEach((cmd, idx) => {
+        if (!groups[cmd.category]) groups[cmd.category] = [];
+        groups[cmd.category].push({ cmd, flatIndex: idx });
+      });
+
+      let html = "";
+      Object.keys(groups).forEach((cat) => {
+        html += `<div class="cmd-palette__group"><div class="cmd-palette__group-title">${cat}</div>`;
+        groups[cat].forEach(({ cmd, flatIndex }) => {
+          const isSelected = flatIndex === selectedIndex;
+          html += `
+            <div class="cmd-palette__item ${isSelected ? "is-selected" : ""}" data-index="${flatIndex}" role="option" aria-selected="${isSelected}">
+              <div class="cmd-palette__item-icon-box">
+                <svg class="icon icon--sm"><use href="#${cmd.icon}"></use></svg>
+              </div>
+              <div class="cmd-palette__item-info">
+                <div class="cmd-palette__item-title">${cmd.title}</div>
+                <div class="cmd-palette__item-desc">${cmd.desc}</div>
+              </div>
+              <span class="cmd-palette__item-action">${cmd.actionLabel || "Select"}</span>
+            </div>
+          `;
+        });
+        html += `</div>`;
+      });
+
+      results.innerHTML = html;
+      ensureVisibleSelection();
+    }
+
+    function ensureVisibleSelection() {
+      const activeEl = $(`[data-index="${selectedIndex}"]`, results);
+      if (activeEl) {
+        activeEl.scrollIntoView({ block: "nearest" });
+      }
+    }
+
+    function executeSelected() {
+      if (filteredCommands[selectedIndex]) {
+        const item = filteredCommands[selectedIndex];
+        closePalette();
+        setTimeout(() => {
+          item.perform();
+        }, 120);
+      }
+    }
+
+    input.addEventListener("input", () => {
+      filterAndRender(input.value);
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (filteredCommands.length > 0) {
+          selectedIndex = (selectedIndex + 1) % filteredCommands.length;
+          updateSelectedClass();
+        }
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (filteredCommands.length > 0) {
+          selectedIndex = (selectedIndex - 1 + filteredCommands.length) % filteredCommands.length;
+          updateSelectedClass();
+        }
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        executeSelected();
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        closePalette();
+      }
+    });
+
+    function updateSelectedClass() {
+      $$(".cmd-palette__item", results).forEach((item) => {
+        const idx = parseInt(item.getAttribute("data-index"), 10);
+        const isMatch = idx === selectedIndex;
+        item.classList.toggle("is-selected", isMatch);
+        item.setAttribute("aria-selected", isMatch ? "true" : "false");
+      });
+      ensureVisibleSelection();
+    }
+
+    results.addEventListener("click", (e) => {
+      const itemEl = e.target.closest(".cmd-palette__item");
+      if (itemEl) {
+        const idx = parseInt(itemEl.getAttribute("data-index"), 10);
+        if (!isNaN(idx) && filteredCommands[idx]) {
+          selectedIndex = idx;
+          executeSelected();
+        }
+      }
+    });
+
+    results.addEventListener("mousemove", (e) => {
+      const itemEl = e.target.closest(".cmd-palette__item");
+      if (itemEl) {
+        const idx = parseInt(itemEl.getAttribute("data-index"), 10);
+        if (!isNaN(idx) && idx !== selectedIndex) {
+          selectedIndex = idx;
+          updateSelectedClass();
+        }
+      }
+    });
+
+    if (openBtn) openBtn.addEventListener("click", openPalette);
+    if (closeBtn) closeBtn.addEventListener("click", closePalette);
+    if (backdrop) backdrop.addEventListener("click", closePalette);
+
+    window.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === "k" || e.key === "K")) {
+        e.preventDefault();
+        if (palette.classList.contains("is-open")) {
+          closePalette();
+        } else {
+          openPalette();
+        }
+        return;
+      }
+
+      if (e.key === "/" || e.key === "?") {
+        const tag = (document.activeElement && document.activeElement.tagName) || "";
+        if (tag !== "INPUT" && tag !== "TEXTAREA" && !palette.classList.contains("is-open")) {
+          e.preventDefault();
+          openPalette();
+        }
+      }
+
+      if (e.key === "Escape" && palette.classList.contains("is-open")) {
+        closePalette();
+      }
     });
   }
 
@@ -768,6 +1227,7 @@
       if (iconCopy)  iconCopy.style.display  = "none";
       if (iconCheck) iconCheck.style.display = "";
       btn.setAttribute("aria-label", "Email copied!");
+      showToast("Copied prabhanjank6080@gmail.com to clipboard!");
 
       // Reset after 2 s
       setTimeout(() => {
