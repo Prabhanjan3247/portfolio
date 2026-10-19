@@ -121,8 +121,6 @@
       <symbol id="icon-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
       <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></symbol>
       <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
-      <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
-      <symbol id="icon-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></symbol>
     </defs>
   </svg>
 
@@ -187,11 +185,6 @@
       <div class="nav__backdrop" id="navBackdrop" aria-hidden="true"></div>
 
       <div class="nav__actions">
-        <button class="nav__palette-btn" id="cmdPaletteBtn" aria-label="Open command palette (Ctrl+K)" title="Quick search & actions (Ctrl+K)">
-          <svg class="icon icon--sm"><use href="#icon-search"></use></svg>
-          <span class="nav__palette-text">Search</span>
-          <span class="nav__palette-kbd"><kbd class="cmd-k-key">Ctrl</kbd><kbd>K</kbd></span>
-        </button>
         <a href="#contact" class="btn btn--sm btn--primary nav__cta">Let's talk</a>
         <button class="nav__theme-toggle" id="themeToggle" aria-label="Switch to light mode" title="Toggle theme">
           <svg class="icon theme-icon theme-icon--sun"><use href="#icon-sun"></use></svg>
@@ -1043,37 +1036,6 @@
           <!-- Dynamically populated by script.js from central projectsData -->
         </div>
       </div>
-    </div>
-
-    <!-- ============ COMMAND PALETTE (CTRL+K) ============ -->
-    <div class="cmd-palette" id="cmdPalette" role="dialog" aria-modal="true" aria-labelledby="cmdPaletteTitle" aria-hidden="true">
-      <div class="cmd-palette__backdrop" id="cmdPaletteBackdrop"></div>
-      <div class="cmd-palette__dialog">
-        <div class="cmd-palette__search">
-          <svg class="icon cmd-palette__search-icon"><use href="#icon-search"></use></svg>
-          <input type="text" class="cmd-palette__input" id="cmdPaletteInput" placeholder="Type a command or search sections, projects, actions..." autocomplete="off" spellcheck="false" aria-label="Command search input">
-          <button class="cmd-palette__esc-btn" id="cmdPaletteClose" aria-label="Close command palette">
-            <kbd>ESC</kbd>
-          </button>
-        </div>
-        <div class="cmd-palette__body" id="cmdPaletteResults" role="listbox" aria-label="Suggestions">
-          <!-- Dynamically rendered by script.js -->
-        </div>
-        <div class="cmd-palette__footer">
-          <div class="cmd-palette__hints">
-            <span class="cmd-palette__hint"><kbd>↑</kbd><kbd>↓</kbd> Navigate</span>
-            <span class="cmd-palette__hint"><kbd>↵</kbd> Select</span>
-            <span class="cmd-palette__hint"><kbd>ESC</kbd> Close</span>
-          </div>
-          <span class="cmd-palette__tip">Tip: Press <kbd class="cmd-k-key">Ctrl</kbd> + <kbd>K</kbd> anywhere</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ============ FLOATING TOAST NOTIFICATION ============ -->
-    <div class="toast" id="toastNotification" role="status" aria-live="polite" aria-hidden="true">
-      <svg class="icon icon--sm toast__icon"><use href="#icon-check"></use></svg>
-      <span class="toast__text" id="toastNotificationText"></span>
     </div>
 
   </main>
