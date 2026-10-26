@@ -48,7 +48,8 @@ portfolio/
 
 5. **Cleaned Certifications & Activities**:
    - Removed all placeholder dates and empty cards.
-   - Credential verification tags for all 9 recognized certifications.
+   - Credential verification tags and direct PDF viewing links for verified credentials (including AWS Cloud Quest, Simulink Onramp, and Smart Farming Guest Talk certificate of participation).
+   - 10 recognized certifications & credentials accurately documented.
 
 ## Running Locally
 
