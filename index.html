@@ -569,7 +569,7 @@
             <div class="project-card__body">
               <div class="project-card__header">
                 <h3 class="project-card__title">Industrial Asset Tracking Research</h3>
-                <span class="project-status project-status--research">Active Research</span>
+                <span class="project-status project-status--research">RTLS</span>
               </div>
               <p class="project-card__desc">Researched and evaluated UWB, BLE and RFID tracking technologies during the Cummins internship to track manufacturing goods across a G+7 racking system and optimize VNA truck movements.</p>
               <div class="chip-row">
@@ -607,6 +607,33 @@
               </div>
               <div class="project-card__actions">
                 <button type="button" class="btn btn--sm btn--primary" data-project-id="project-riscv">
+                  View Details
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- 5. Design of Blade Antenna for UAV Applications (Capstone) -->
+          <article class="project-card card" data-category="embedded research" data-reveal>
+            <div class="project-card__image project-card__image--embedded">
+              <span class="project-card__image-tag">// RF &amp; AEROSPACE · CAPSTONE</span>
+              <svg class="icon icon--lg"><use href="#icon-radio"></use></svg>
+            </div>
+            <div class="project-card__body">
+              <div class="project-card__header">
+                <h3 class="project-card__title">Design of Blade Antenna for UAV Applications</h3>
+                <span class="project-status project-status--in-progress">In Progress</span>
+              </div>
+              <p class="project-card__desc">Undergraduate Capstone Project at PES University investigating gain improvement and wideband impedance matching (20 MHz–1300 MHz) for aerodynamic UAV bi-blade dipole antennas in Ansys HFSS.</p>
+              <div class="chip-row">
+                <span class="chip chip--sm">Ansys HFSS</span>
+                <span class="chip chip--sm">Keysight ADS</span>
+                <span class="chip chip--sm">RF &amp; Antennas</span>
+                <span class="chip chip--sm">Electromagnetics</span>
+                <span class="chip chip--sm">Broadband Matching</span>
+              </div>
+              <div class="project-card__actions">
+                <button type="button" class="btn btn--sm btn--primary" data-project-id="project-antenna">
                   View Details
                 </button>
               </div>
@@ -654,6 +681,8 @@
           <div class="skill-card card" data-reveal>
             <h3 class="skill-card__title"><svg class="icon"><use href="#icon-radio"></use></svg>Electronics &amp; Simulation</h3>
             <div class="chip-row">
+              <span class="chip chip--mono">Ansys HFSS</span>
+              <span class="chip chip--mono">Keysight ADS</span>
               <span class="chip chip--mono">MATLAB</span>
               <span class="chip chip--mono">MATLAB Simulink</span>
               <span class="chip chip--mono">Cadence Virtuoso</span>
@@ -993,9 +1022,11 @@
             </div>
           </div>
 
-          <form class="contact-form card" id="contactForm" action="https://formsubmit.co/prabhanjank6080@gmail.com" method="POST" data-reveal novalidate>
+          <form class="contact-form card" id="contactForm" action="https://api.web3forms.com/submit" method="POST" data-reveal novalidate>
             <!-- Honeypot spam protection -->
-            <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none !important;" aria-hidden="true">
+            <input type="checkbox" name="botcheck" class="hidden" style="display:none !important;" aria-hidden="true">
+            <input type="hidden" name="access_key" value="73f93a41-176c-4e05-986a-eb6eaee6d146">
+            <input type="hidden" name="from_name" value="Prabhanjan Portfolio Website">
 
             <div class="form-group">
               <label for="name">Your Name</label>

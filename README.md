@@ -25,38 +25,30 @@ portfolio/
 
 2. **Project Detail Views & Central Data**:
    - Central `projectsData` array in `script.js` maintaining problem statements, architecture, contributions, status, and verified URLs.
-   - Accessible **Project Details Modal** (`role="dialog"`, ESC key close, URL hash deep linking like `#project-churn`, `#project-quiz`, `#project-rtls`).
-   - Verified Code button for **Customer Churn Prediction** (`github.com/Prabhanjan3247/Customer-Churn-Prediction`).
-   - Missing repository buttons are hidden cleanly—no broken `#` links or fabricated URLs.
-   - Distinct classification of the RTLS work as **industrial research & technology evaluation** during the Cummins India internship.
+   - Accessible **Project Details Modal** (`role="dialog"`, ESC key close, URL hash deep linking like `#project-churn`, `#project-quiz`, `#project-rtls`, `#project-riscv`, `#project-antenna`).
+   - **Capstone Project**: Added *"Design of Blade Antenna for UAV Applications"* (In Progress) at PES University — covering wideband (20 MHz–1300 MHz) bi-blade dipole antenna modeling, gain improvement analysis, adaptive convergence meshing in Ansys HFSS, and matching circuit design in Keysight ADS.
+   - **Hardware & VLSI**: *"RISC-V 32-Bit Processor Subsystem"* (In Progress) SystemVerilog RTL design verified in Xilinx Vivado.
+   - **Research & RTLS**: Industrial asset tracking research conducted during Cummins India internship with clear `RTLS` status classification.
+   - Verified Code repository link for **Customer Churn Prediction** (`github.com/Prabhanjan3247/Customer-Churn-Prediction`).
 
-3. **Production-Ready FormSubmit.co Contact Form (Unlimited Free Submissions)**:
-   - Asynchronous `fetch` submission with loading state, anti-duplicate prevention, honeypot spam protection (`_gotcha`), and client-side validation.
-   - Clean success, failure, and first-time activation status notifications.
-   - 100% unlimited free messages delivered straight to `prabhanjank6080@gmail.com` with no monthly caps and no account needed.
+3. **Production-Ready Web3Forms Contact Form**:
+   - Direct integration with **Web3Forms** using a dedicated access key.
+   - Asynchronous `fetch` submission with button loading states, anti-spam honeypot protection (`botcheck`), and instant real-time field validation.
+   - Graceful status notifications for success, validation errors, and network/server failure with automatic `mailto:` direct email fallback.
+   - Clean, ad-free message delivery straight to `prabhanjank6080@gmail.com`.
 
-4. **Reorganized Technical Skills**:
+4. **Reorganized Technical Skills & Electronics Simulation**:
    - Categorized into 6 clean, verified groups:
      1. *Embedded Systems & Digital Design*
-     2. *Electronics & Simulation*
+     2. *Electronics & Simulation* (including **Ansys HFSS**, **Keysight ADS**, MATLAB, Simulink, Cadence Virtuoso, and Xilinx Vivado)
      3. *Programming Languages*
      4. *Software & Data Analytics*
      5. *Cloud & AI Tools*
      6. *Professional Skills*
 
 5. **Cleaned Certifications & Activities**:
-   - Removed all `"Add issue date"` placeholders.
+   - Removed all placeholder dates and empty cards.
    - Credential verification tags for all 9 recognized certifications.
-   - Removed empty achievement card placeholders.
-
-## Contact Form Activation (30 Seconds — One Time Only)
-
-The contact form is already pre-configured to send messages directly to `prabhanjank6080@gmail.com` with **unlimited submissions** via FormSubmit.co:
-
-1. Open your portfolio website and submit a quick test message through the Contact section.
-2. Check your `prabhanjank6080@gmail.com` inbox for an email from FormSubmit titled *"Please confirm your email"*.
-3. Click the **"Activate Form"** button inside that email.
-4. That's it! From then on, every message submitted on your portfolio arrives directly in your Gmail inbox with zero limits, and you can reply to visitors normally with the standard "Reply" button.
 
 ## Running Locally
 

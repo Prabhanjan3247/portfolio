@@ -82,7 +82,7 @@
       title: "Industrial Asset Tracking Research",
       category: "research",
       categoryLabel: "Research & RTLS",
-      badge: "Active Research",
+      badge: "RTLS",
       badgeType: "research",
       problem: "Maintaining continuous real-time visibility over semi-finished and finished goods across multi-tier (G+7) warehouse racking while analyzing Material Handling Equipment (MHE) routes in an active manufacturing plant.",
       description: "Researched and evaluated Real-Time Location System (RTLS) tracking technologies during the Cummins India internship. Focused on locating Semi-Finished and Finished Goods and tracking Very Narrow Aisle (VNA) truck movement patterns.",
@@ -111,6 +111,25 @@
       challenges: "Handling corner-case arithmetic overflows, managing synchronous vs asynchronous reset behaviors in register files, and ensuring timing closure under simulated clock constraints.",
       outcomes: "Active implementation targeting verified zero-error execution for fundamental arithmetic, logical, and branch instructions with waveform validation across Vivado testbenches.",
       status: "Active implementation: SystemVerilog RTL design and testbench verification in Xilinx Vivado. Open-source repository will be linked upon simulation sign-off.",
+      repoUrl: null,
+      demoUrl: null,
+      isResearch: false
+    },
+    {
+      id: "project-antenna",
+      title: "Design of Blade Antenna for UAV Applications",
+      category: "embedded",
+      categoryLabel: "RF & Electromagnetics · Capstone",
+      badge: "In Progress",
+      badgeType: "in-progress",
+      problem: "Airborne UAV communication, telemetry, and high-bandwidth data links operate under stringent aerodynamic and space envelopes, requiring low-profile bi-blade antennas that maintain wideband impedance matching (VSWR < 2.5), high realized gain, and stable radiation coverage across the 20 MHz to 1300 MHz band.",
+      description: "Undergraduate Capstone Project at PES University (Team: Prabhanjan P Katti, G Sree Akshaya, P Mokshith Reddy) focused on the design, full-wave electromagnetic simulation, and gain enhancement of wideband bi-blade dipole antennas for UAV platforms. Based on IEEE literature (Nosrati et al.), the project analyzes progressive antenna evolution from baseline dipoles (ANT1) to slotted dual semi-parallel configurations (ANT4).",
+      technologies: ["Ansys HFSS", "Keysight ADS", "RF & Microwave", "Electromagnetics", "Antenna Modeling", "Broadband Matching"],
+      contribution: "Constructing parametric 3D CAD bi-blade geometry (Copper radiator, 71.2 cm × 25 cm, tilt α=3°) in Ansys HFSS; configuring radiation boundaries, lumped ports, and adaptive convergence meshing (ΔS ≤ 0.02 at 1.3 GHz); running broadband sweeps (20–1300 MHz); extracting S11 return loss, VSWR, and realized gain curves; and designing matching RL network topologies in Keysight ADS.",
+      architecture: "Parametric Bi-Blade CAD Modeling → Radiation / PML Boundary Setup → 50 Ω Coaxial & Lumped Port Excitation → Adaptive Meshing & Convergence (1.3 GHz) → Full-Band Sweep (20 MHz–1300 MHz) → S11, VSWR & Realized Gain Extraction → Parametric Tail & Slot Optimization in HFSS & ADS.",
+      challenges: "Navigating extreme wavelength disparity across the band (λ ≈ 15 m at 20 MHz down to λ ≈ 0.231 m at 1300 MHz); suppressing high-frequency gain drops caused by slot modes; and achieving wideband matching without bulky transformers in a lightweight aerodynamic UAV profile.",
+      outcomes: "Active Capstone Project at PES University: Baseline bi-blade geometry successfully CAD modeled, full-wave HFSS simulation workflow established, and parametric sweeps underway to validate gain improvements and VSWR < 2.5 performance across the target 20 MHz–1300 MHz spectrum.",
+      status: "Active Capstone Project (In Progress) at PES University. Team: Prabhanjan P Katti (PES2UG24EC081), G Sree Akshaya (PES2UG24EC030), P Mokshith Reddy (PES2UG24EC064). Detailed simulation results and HFSS models will be updated upon milestone review.",
       repoUrl: null,
       demoUrl: null,
       isResearch: false
@@ -465,6 +484,7 @@
     const phrases = [
       "Embedded Systems",
       "Industrial IoT & RTLS",
+      "RF & Antenna Design",
       "Digital Design & VLSI",
       "Data Analytics & AI",
       "Software Engineering"
@@ -585,7 +605,8 @@
 
         const filter = btn.getAttribute("data-filter");
         cards.forEach((card) => {
-          const match = filter === "all" || card.getAttribute("data-category") === filter;
+          const categories = (card.getAttribute("data-category") || "").split(/\s+/);
+          const match = filter === "all" || categories.includes(filter);
           card.classList.toggle("is-hidden", !match);
         });
       });
@@ -656,6 +677,12 @@
             ${project.technologies.map(t => `<span class="chip chip--sm">${t}</span>`).join("")}
           </div>
         </div>
+
+        ${project.status ? `
+          <div class="modal-status-note">
+            <span class="status-note-label">Project Status:</span> ${project.status}
+          </div>
+        ` : ""}
 
         <div class="modal-actions">
           ${project.repoUrl ? `
@@ -794,13 +821,22 @@
       status.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 
+    // Clear validation error dynamically as user types
+    $$("input, textarea", form).forEach((input) => {
+      input.addEventListener("input", () => {
+        if (input.classList.contains("is-invalid")) {
+          input.classList.remove("is-invalid");
+        }
+      });
+    });
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       $$("input, textarea", form).forEach((el) => el.classList.remove("is-invalid"));
 
       // Honeypot spam protection
-      const honeypot = form.querySelector('[name="_honey"]')?.value;
+      const honeypot = form.querySelector('[name="_honey"]')?.value || form.querySelector('[name="botcheck"]')?.checked;
       if (honeypot) return;
 
       const nameInput    = $("#name",    form);
@@ -841,7 +877,7 @@
         payload.append("subject", `Portfolio Contact: ${subject}`);
         payload.append("message", `From: ${name} (${email})\n\n${message}`);
         payload.append("botcheck", "");       // honeypot field for Web3Forms
-        payload.append("from_name", "Portfolio Website");
+        payload.append("from_name", "Prabhanjan Portfolio Website");
 
         const res  = await fetch("https://api.web3forms.com/submit", {
           method: "POST",
